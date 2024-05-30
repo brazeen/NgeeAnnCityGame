@@ -6,6 +6,7 @@ const buildings = {
     "industry": [2,1]
 }
 
+//generate the spots with coordinates as their id
 for (var y = 0; y < gridSize[0]; y++){
     for (var x = 0; x < gridSize[1]; x++){
         grid.innerHTML += `
@@ -15,7 +16,11 @@ for (var y = 0; y < gridSize[0]; y++){
 }
 
 function placeBuilding(type, x, y){
-    document.getElementById(`${x},${y}`).innerHTML = `<img src="./assets/${type}.png" width="100%"></img>`
+    const spot = document.getElementById(`${x},${y}`)
+    //display image in spot
+    spot.innerHTML = `<img src="./assets/${type}.png" width="100%"></img>`
+    //add class
+    spot.classList.add(type)
 }
 
 placeBuilding("road",1,1)
