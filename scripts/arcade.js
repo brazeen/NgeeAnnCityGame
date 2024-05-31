@@ -36,11 +36,11 @@ function generateRandomBuilding(){
     choice2 = typeList[choice2]
     const randomdiv1 = document.getElementById('randombuilding-1')
     const randomdiv2 = document.getElementById('randombuilding-2')
-    randomdiv1.innerHTML = `<img src="./assets/${choice1}.png" width="100%"></img>`
-    randomdiv2.innerHTML = `<img src="./assets/${choice2}.png" width="100%"></img>`
+    randomdiv1.innerHTML = `<img src="./assets/${choice1}.png" width="100%" draggable="true"></img>`
+    randomdiv2.innerHTML = `<img src="./assets/${choice2}.png" width="100%" draggable="true"></img>`
 }
 
 generateRandomBuilding()
-placeBuilding("road",1,1)
+placeBuilding("road",1,1)   
 placeBuilding("road",1,2)
 placeBuilding("road",1,3)
