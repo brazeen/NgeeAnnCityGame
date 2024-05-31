@@ -10,7 +10,7 @@ const buildings = {
 for (var y = 0; y < gridSize[0]; y++){
     for (var x = 0; x < gridSize[1]; x++){
         grid.innerHTML += `
-        <div class = "grid-spot" id = "${x},${y}"></div>
+        <div class = "grid-spot" id = "${x},${y}" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
         `
     }
 }
@@ -36,8 +36,30 @@ function generateRandomBuilding(){
     choice2 = typeList[choice2]
     const randomdiv1 = document.getElementById('randombuilding-1')
     const randomdiv2 = document.getElementById('randombuilding-2')
-    randomdiv1.innerHTML = `<img src="./assets/${choice1}.png" width="100%" draggable="true"></img>`
-    randomdiv2.innerHTML = `<img src="./assets/${choice2}.png" width="100%" draggable="true"></img>`
+    randomdiv1.innerHTML = `<img src="./assets/${choice1}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building1" data-type="${choice1}"></img>`
+    randomdiv2.innerHTML = `<img src="./assets/${choice2}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building2" data-type="${choice2}"></img>`
+}
+
+//allow dropping on grid spots
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+//handle drag event
+function drag(ev) {
+    ev.dataTransfer.setData("building", ev.target.id);
+}
+
+//handle drop event
+function drop(ev) {
+    ev.preventDefault();
+    const data = ev.dataTransfer.getData("building");
+    const img = document.getElementById(data);
+    const type = img.getAttribute("data-type");
+    const targetId = ev.target.id;
+    const [x, y] = targetId.split(',').map(Number);
+    placeBuilding(type, x, y);
+    generateRandomBuilding()
 }
 
 generateRandomBuilding()
