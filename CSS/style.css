@@ -17,3 +17,16 @@
 .grid-spot{
     border: 1px solid black;
 }
+
+#randombuilding-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    width: 200px;
+    border: 1px solid black;
+    aspect-ratio: 2;
+    }
+
+#randombuilding-1, #randombuilding-2{
+    border: 1px solid black;
+}
