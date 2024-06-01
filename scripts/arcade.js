@@ -7,12 +7,17 @@ const buildings = {
 }
 
 //generate the spots with coordinates as their id
+//also initialise a 2d array
+const gridData = []
 for (var y = 0; y < gridSize[0]; y++){
+    var row = []
     for (var x = 0; x < gridSize[1]; x++){
         grid.innerHTML += `
         <div class = "grid-spot" id = "${x},${y}" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="spotDragEnter(event)" ondragleave="spotDragLeave(event)"></div>
         `
+        row.push("")
     }
+    gridData.push(row)
 }
 
 function placeBuilding(type, x, y){
@@ -22,7 +27,9 @@ function placeBuilding(type, x, y){
     //add class
     spot.classList.add(type)
     //reset background color
-    spot.style.backgroundColor = "";
+    spot.style.backgroundColor = ""
+    //update grid data
+    gridData[y][x] = type
 }
 
 function generateRandomBuilding(){
@@ -55,7 +62,7 @@ function drag(ev) {
 //handle drop event
 function drop(ev) {
     ev.preventDefault();
-    const data = ev.dataTransfer.getData("building");
+    const data = ev.dataTransfer.getData("building")
     const img = document.getElementById(data);
     const type = img.getAttribute("data-type");
     const targetId = ev.target.id;
@@ -66,11 +73,11 @@ function drop(ev) {
 
 //change backrgound colour when drag is hovered over tile
 function spotDragEnter(event){
-    event.target.style.backgroundColor = "lightblue";
+    event.target.style.backgroundColor = "lightblue"
 }
 
 function spotDragLeave(event){
-    event.target.style.backgroundColor = "";
+    event.target.style.backgroundColor = ""
 }
 
 generateRandomBuilding()
