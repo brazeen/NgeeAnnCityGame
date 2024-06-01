@@ -30,3 +30,19 @@
 #randombuilding-1, #randombuilding-2{
     border: 1px solid black;
 }
+
+.top-stats{
+    font-size: 2rem;
+    display: flex;
+    margin-bottom: 3vw;
+}
+
+.img-txt{
+    display: flex;
+    align-items: center;
+}
+
+.img-txt img{
+    height: 2rem;
+    margin-right: 1rem;
+}
