@@ -53,6 +53,8 @@ function generateRandomBuilding(){
     randomdiv2.innerHTML = `<img src="./assets/${choice2}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building2" data-type="${choice2}"></img>`
 }
 
+const spotOccupied = (x,y) => gridData[y][x] 
+
 //allow dropping on grid spots
 function allowDrop(ev) {
     ev.preventDefault();
@@ -66,17 +68,21 @@ function drag(ev) {
 //handle drop event
 function drop(ev) {
     ev.preventDefault();
+    const targetId = ev.target.id;
+    const [x, y] = targetId.split(',').map(Number);
+    if (spotOccupied(x,y)) return
+
     const data = ev.dataTransfer.getData("building")
     const img = document.getElementById(data);
     const type = img.getAttribute("data-type");
-    const targetId = ev.target.id;
-    const [x, y] = targetId.split(',').map(Number);
     placeBuilding(type, x, y);
     generateRandomBuilding()
 }
 
 //change backrgound colour when drag is hovered over tile
 function spotDragEnter(event){
+    const [x, y] = event.target.id.split(',').map(Number)
+    if (spotOccupied(x,y)) return
     event.target.style.backgroundColor = "lightblue"
 }
 
