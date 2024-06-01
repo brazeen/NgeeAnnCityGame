@@ -1,5 +1,7 @@
 const grid = document.getElementById("game-grid")
-
+const coinLabel = document.getElementById("coins")
+var coins = 16
+updateCoins()
 const gridSize = [20,20]
 const buildings = {
     "residential": [1,1],
@@ -30,6 +32,8 @@ function placeBuilding(type, x, y){
     spot.style.backgroundColor = ""
     //update grid data
     gridData[y][x] = type
+    //update coins
+    updateCoins(-1)
 }
 
 function generateRandomBuilding(){
@@ -80,7 +84,13 @@ function spotDragLeave(event){
     event.target.style.backgroundColor = ""
 }
 
+function updateCoins(value = 0){
+    coins += value
+    console.log(coins)
+    coinLabel.innerText = coins
+}
+function calculateScore(){
+
+}
+
 generateRandomBuilding()
-placeBuilding("road",1,1)   
-placeBuilding("road",1,2)
-placeBuilding("road",1,3)
