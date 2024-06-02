@@ -1,11 +1,29 @@
 const grid = document.getElementById("game-grid")
 const coinLabel = document.getElementById("coins")
 var coins = 16
+var turns = 1
+var placedOneBuilding = false
+var score = 0
 updateCoins()
 const gridSize = [20,20]
 const buildings = {
     "residential": [1,1],
     "industry": [2,1]
+}
+
+
+const adjBuildingScores = { //only store scoring data for buildings that have scores based on adjacent buildings
+    "residential": [
+        ["industry", 1, true], 
+        ["residential", 1, false], 
+        ["commercial", 1, false], 
+        ["park", 2, false]],
+    "commercial": [
+        ["commercial", 1, false]
+    ],
+    "park": [
+        ["park",1, false]
+    ]
 }
 
 //generate the spots with coordinates as their id
@@ -53,7 +71,44 @@ function generateRandomBuilding(){
     randomdiv2.innerHTML = `<img src="./assets/${choice2}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building2" data-type="${choice2}"></img>`
 }
 
-const spotOccupied = (x,y) => gridData[y][x] 
+//return a array containing all buildings in a 3x3 area (exclduing the target coords)
+function getAdjacent(type, x,y){
+    if (turns == 1) return ""
+    if (y === undefined || x  === undefined) return null //spot is already occupied
+    const adjTiles = [[0,1],[0,-1],[1,0],[-1,0],[1,-1],[1,1],[-1,1],[-1,-1]] //relative coordinates of adjacent tiles
+    var valid = false
+    const adjBuilding = type in adjBuildingScores
+    var out = 0
+    for (i in adjTiles){
+        const tileY = adjTiles[i][0] + y
+        const tileX = adjTiles[i][1] + x
+        //check for out-of-bounds search
+        if (tileY < 0 || tileX < 0 || tileY == gridSize[0] || tileX == gridSize[1]) continue
+        const tile = gridData[tileY][tileX]
+        //placeable area
+        if (tile){
+            valid = true
+            //calculate score if applicable
+            if (adjBuilding){
+                const buildings = adjBuildingScores[type]
+                for (i in buildings){
+                    const data = buildings[i]
+                    if (tile == data[0]){
+                        out += data[1]
+                        if (data[2]){ //check for "only" condition
+                            out = data[1]
+                            break
+                        }
+                    }
+                }
+            }
+        }
+        //i love the nests how fun 
+    }
+
+    console.log(out)
+    return (valid) ? out : null
+}
 
 //allow dropping on grid spots
 function allowDrop(ev) {
@@ -68,21 +123,22 @@ function drag(ev) {
 //handle drop event
 function drop(ev) {
     ev.preventDefault();
-    const targetId = ev.target.id;
+    const targetId = ev.target.id
     const [x, y] = targetId.split(',').map(Number);
-    if (spotOccupied(x,y)) return
 
     const data = ev.dataTransfer.getData("building")
     const img = document.getElementById(data);
     const type = img.getAttribute("data-type");
+    if (getAdjacent(type,x,y) == null) return
     placeBuilding(type, x, y);
     generateRandomBuilding()
+    turns += 1
 }
 
 //change backrgound colour when drag is hovered over tile
 function spotDragEnter(event){
     const [x, y] = event.target.id.split(',').map(Number)
-    if (spotOccupied(x,y)) return
+    if (getAdjacent(null,x,y) == null) return
     event.target.style.backgroundColor = "lightblue"
 }
 
@@ -92,7 +148,6 @@ function spotDragLeave(event){
 
 function updateCoins(value = 0){
     coins += value
-    console.log(coins)
     coinLabel.innerText = coins
 }
 function calculateScore(){
