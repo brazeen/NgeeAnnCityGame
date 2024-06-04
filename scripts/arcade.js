@@ -1,11 +1,13 @@
 const grid = document.getElementById("game-grid")
 const coinLabel = document.getElementById("coins")
+const scoreLabel = document.getElementById("score")
 var coins = 16
 var turns = 1
 var placedOneBuilding = false
 var score = 0
 updateCoins()
 const gridSize = [20,20]
+var buildingCount = 0 //track number buildings so we know when all tiles are filled
 const buildings = {
     "residential": [1,1],
     "industry": [2,1]
@@ -17,7 +19,8 @@ const adjBuildingScores = { //only store scoring data for buildings that have sc
         ["industry", 1, true], 
         ["residential", 1, false], 
         ["commercial", 1, false], 
-        ["park", 2, false]],
+        ["park", 2, false]
+    ],
     "commercial": [
         ["commercial", 1, false]
     ],
@@ -27,17 +30,21 @@ const adjBuildingScores = { //only store scoring data for buildings that have sc
 }
 
 //generate the spots with coordinates as their id
-//also initialise a 2d array
-const gridData = []
+//also initialise the 2d arrays
+var gridData = [] //store the buildings on the grid
+var scoreData = [] //store the score of the buildings on the grid
 for (var y = 0; y < gridSize[0]; y++){
-    var row = []
+    var gridRow = []
+    var scoreRow = []
     for (var x = 0; x < gridSize[1]; x++){
         grid.innerHTML += `
         <div class = "grid-spot" id = "${x},${y}" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="spotDragEnter(event)" ondragleave="spotDragLeave(event)"></div>
         `
-        row.push("")
+        gridRow.push("")
+        scoreRow.push(0)
     }
-    gridData.push(row)
+    gridData.push(gridRow)
+    scoreData.push(scoreRow)
 }
 
 function placeBuilding(type, x, y){
@@ -71,43 +78,62 @@ function generateRandomBuilding(){
     randomdiv2.innerHTML = `<img src="./assets/${choice2}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building2" data-type="${choice2}"></img>`
 }
 
-//return a array containing all buildings in a 3x3 area (exclduing the target coords)
-function getAdjacent(type, x,y){
-    if (turns == 1) return ""
+//return a array containing all buildings with their coordinates in a area specified by relativeCoords
+function getSurrounding(x,y, relativeCoords){
     if (y === undefined || x  === undefined) return null //spot is already occupied
-    const adjTiles = [[0,1],[0,-1],[1,0],[-1,0],[1,-1],[1,1],[-1,1],[-1,-1]] //relative coordinates of adjacent tiles
-    var valid = false
-    const adjBuilding = type in adjBuildingScores
-    var out = 0
-    for (i in adjTiles){
-        const tileY = adjTiles[i][0] + y
-        const tileX = adjTiles[i][1] + x
+    var out = []
+    for (i in relativeCoords){
+        const tileY = relativeCoords[i][0] + y
+        const tileX = relativeCoords[i][1] + x
         //check for out-of-bounds search
         if (tileY < 0 || tileX < 0 || tileY == gridSize[0] || tileX == gridSize[1]) continue
-        const tile = gridData[tileY][tileX]
-        //placeable area
-        if (tile){
-            valid = true
-            //calculate score if applicable
-            if (adjBuilding){
-                const buildings = adjBuildingScores[type]
-                for (i in buildings){
-                    const data = buildings[i]
-                    if (tile == data[0]){
-                        out += data[1]
-                        if (data[2]){ //check for "only" condition
-                            out = data[1]
-                            break
-                        }
-                    }
+        if (gridData[tileY][tileX]) out.push(gridData[tileY][tileX])
+    }
+    return out
+}
+
+function calculateScore(x,y,type){
+    var finalScore = 0
+    //buildings that use adjacent scoring
+    if (type in adjBuildingScores){
+        const adjRelativeCoords = [[0,1],[0,-1],[1,0],[-1,0],[1,-1],[1,1],[-1,1],[-1,-1]] //relative coordinates of adjacent tiles
+        const buildingData = adjBuildingScores[type]
+        const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
+        //search for surrounding buildings that meet the database
+        for (i in buildingData){
+            data = buildingData[i]
+            for (j in surroundBuildings){
+                if (data[0] == surroundBuildings[j]){
+                    if (data[2]) return data[1]
+                    finalScore += data[1]
                 }
             }
         }
-        //i love the nests how fun 
-    }
 
-    console.log(out)
-    return (valid) ? out : null
+    }else if (type == "industry"){
+        finalScore = 1
+    }else if (type == "road"){
+        const rowRelativeCoords = [[0,1],[0,-1]]
+        const rowBuildings = getSurrounding(x,y,rowRelativeCoords)
+        for (i in rowBuildings){
+            //check if its connected to another road
+            if (rowBuildings[i] == "road"){
+                finalScore = 1
+                break
+            }
+        }
+    }
+    return finalScore
+}
+
+//check if place tile is connected to another building
+function canPlace(x,y){
+    //on the first turn, building can be placed anywhere
+    if (turns == 1) return true
+    //spot is already occupied 
+    if (y === undefined || x  === undefined) return false
+    const relativeTiles = [[0,1],[0,-1],[1,0],[-1,0]] //relative coordinates of orthogonal tiles
+    return getSurrounding(x,y, relativeTiles).length
 }
 
 //allow dropping on grid spots
@@ -129,16 +155,25 @@ function drop(ev) {
     const data = ev.dataTransfer.getData("building")
     const img = document.getElementById(data);
     const type = img.getAttribute("data-type");
-    if (getAdjacent(type,x,y) == null) return
+    if (!canPlace(x,y)) return
     placeBuilding(type, x, y);
+    score += calculateScore(x,y,type)
+    scoreLabel.innerHTML = score
+    scoreData[y][x] = score
+    console.log(scoreData)
     generateRandomBuilding()
     turns += 1
+    buildingCount += 1
+    //check for game end
+    if (coins == 0 || buildingCount == gridSize[0]*gridSize[1]){
+
+    }
 }
 
 //change backrgound colour when drag is hovered over tile
 function spotDragEnter(event){
     const [x, y] = event.target.id.split(',').map(Number)
-    if (getAdjacent(null,x,y) == null) return
+    if (!canPlace(x,y)) return
     event.target.style.backgroundColor = "lightblue"
 }
 
@@ -149,9 +184,6 @@ function spotDragLeave(event){
 function updateCoins(value = 0){
     coins += value
     coinLabel.innerText = coins
-}
-function calculateScore(){
-
 }
 
 generateRandomBuilding()
