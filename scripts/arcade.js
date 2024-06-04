@@ -1,10 +1,13 @@
 const grid = document.getElementById("game-grid")
 const coinLabel = document.getElementById("coins")
 const scoreLabel = document.getElementById("score")
+const gameoverpopup = document.getElementById("gameover-popup")
+const finalScore = document.getElementById("finalscore")
 var coins = 16
 var turns = 1
 var placedOneBuilding = false
 var score = 0
+var isGameOver = false
 updateCoins()
 const gridSize = [20,20]
 var buildingCount = 0 //track number buildings so we know when all tiles are filled
@@ -62,6 +65,7 @@ function placeBuilding(type, x, y){
 }
 
 function generateRandomBuilding(){
+    if (isGameOver) return;
     //list of png names
     let typeList = ["commercial", "industry", "residential", "park", "road"]
     let choice1 = Math.floor(Math.random() * 5)
@@ -138,6 +142,7 @@ function canPlace(x,y){
 
 //allow dropping on grid spots
 function allowDrop(ev) {
+    if (isGameOver) return;
     ev.preventDefault();
 }
 
@@ -164,10 +169,8 @@ function drop(ev) {
     generateRandomBuilding()
     turns += 1
     buildingCount += 1
-    //check for game end
-    if (coins == 0 || buildingCount == gridSize[0]*gridSize[1]){
-
-    }
+    checkIfGameOver()
+    
 }
 
 //change backrgound colour when drag is hovered over tile
@@ -184,6 +187,16 @@ function spotDragLeave(event){
 function updateCoins(value = 0){
     coins += value
     coinLabel.innerText = coins
+}
+
+function checkIfGameOver(){
+    //check for game end
+    if (coins == 0 || buildingCount == gridSize[0]*gridSize[1]){
+        
+        gameoverpopup.style.display = "flex"
+        finalScore.innerText = score
+        isGameOver = true
+    }
 }
 
 generateRandomBuilding()

@@ -34,6 +34,7 @@
 .top-stats{
     font-size: 2rem;
     display: flex;
+    flex-wrap: wrap;
     margin-bottom: 3vw;
 }
 
@@ -45,4 +46,33 @@
 .img-txt img{
     height: 2rem;
     margin-right: 1rem;
+}
+
+#gameover-popup {
+    width: 50vw;
+    height: 50vh;
+    z-index: 1;
+    position: absolute; 
+    top: 50%;
+    left: 25%;
+    background-color: aliceblue;
+    border: 5px solid black;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#gameover-popup p {
+    font-size: large;
+}
+
+#gameover-popup button {
+    padding: 10px 15px;
+}
+
+@media(max-width: 900px) {
+    #game-grid {
+        width: 100%;
+    }
 }
