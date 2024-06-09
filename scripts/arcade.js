@@ -5,9 +5,9 @@ const gameoverpopup = document.getElementById("gameover-popup")
 const finalScore = document.getElementById("finalscore")
 var coins = 16
 var turns = 1
-var placedOneBuilding = false
 var score = 0
 var isGameOver = false
+var action = ""
 updateCoins()
 const gridSize = [20,20]
 var buildingCount = 0 //track number buildings so we know when all tiles are filled
@@ -62,6 +62,24 @@ function placeBuilding(type, x, y){
     gridData[y][x] = type
     //update coins
     updateCoins(-1)
+    turns += 1
+    buildingCount += 1
+}
+
+function destroyBuilding(x,y){
+    const spot = document.getElementById(`${x},${y}`)
+    const type = gridData[y][x]
+    //remove image in spot
+    spot.innerHTML = ``
+    //add class
+    spot.classList.remove(type)
+    //reset background color
+    spot.style.backgroundColor = ""
+    //update grid data
+    gridData[y][x] = ""
+    updateCoins(1)
+    turns += 1
+    buildingCount -= 1
 }
 
 function generateRandomBuilding(){
@@ -132,8 +150,8 @@ function calculateScore(x,y,type){
 
 //check if place tile is connected to another building
 function canPlace(x,y){
-    //on the first turn, building can be placed anywhere
-    if (turns == 1) return true
+    //building can be placed anywhere
+    if (!buildingCount) return true
     //spot is already occupied 
     if (y === undefined || x  === undefined) return false
     const relativeTiles = [[0,1],[0,-1],[1,0],[-1,0]] //relative coordinates of orthogonal tiles
@@ -148,36 +166,50 @@ function allowDrop(ev) {
 
 //handle drag event
 function drag(ev) {
+    action = "build"
     ev.dataTransfer.setData("building", ev.target.id);
+}
+
+function destroyDrag(event){
+    action = "destroy"
 }
 
 //handle drop event
 function drop(ev) {
     ev.preventDefault();
-    const targetId = ev.target.id
-    const [x, y] = targetId.split(',').map(Number);
+    if (action == "build"){
+        const targetId = ev.target.id
+        const [x, y] = targetId.split(',').map(Number);
 
-    const data = ev.dataTransfer.getData("building")
-    const img = document.getElementById(data);
-    const type = img.getAttribute("data-type");
-    if (!canPlace(x,y)) return
-    placeBuilding(type, x, y);
-    score += calculateScore(x,y,type)
-    scoreLabel.innerHTML = score
-    scoreData[y][x] = score
-    console.log(scoreData)
-    generateRandomBuilding()
-    turns += 1
-    buildingCount += 1
-    checkIfGameOver()
+        const data = ev.dataTransfer.getData("building")
+        const img = document.getElementById(data);
+        const type = img.getAttribute("data-type");
+        if (!canPlace(x,y)) return
+        placeBuilding(type, x, y);
+        score += calculateScore(x,y,type)
+        scoreLabel.innerHTML = score
+        scoreData[y][x] = score
+        generateRandomBuilding()
+        checkIfGameOver()
+    }else{
+        const targetId = ev.target.parentElement.id
+        const [x, y] = targetId.split(',').map(Number);
+        if (x == undefined || y == undefined) return
+        destroyBuilding(x,y)
+    }
     
 }
 
 //change backrgound colour when drag is hovered over tile
 function spotDragEnter(event){
     const [x, y] = event.target.id.split(',').map(Number)
-    if (!canPlace(x,y)) return
-    event.target.style.backgroundColor = "lightblue"
+    if (action == "destroy"){
+        if (y != undefined && x != undefined) return
+        event.target.style.backgroundColor = "red"
+    }else{
+        if (!canPlace(x,y)) return
+        event.target.style.backgroundColor = "lightblue"
+    }
 }
 
 function spotDragLeave(event){
