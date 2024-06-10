@@ -63,7 +63,6 @@ function placeBuilding(type, x, y){
     gridData[y][x] = type
     //update coins
     updateCoins(-1)
-    updateTurn()
     buildingCount += 1
 }
 
@@ -79,7 +78,6 @@ function destroyBuilding(x,y){
     //update grid data
     gridData[y][x] = ""
     updateCoins(-1)
-    updateTurn()
     buildingCount -= 1
 }
 
@@ -136,7 +134,7 @@ function calculateScore(x,y,type){
     }else if (type == "industry"){
         finalScore = 1
     }else if (type == "road"){
-        const rowRelativeCoords = [[0,1],[0,-1]]
+        const rowRelativeCoords = [[0,1],[0,-1],[1,0],[-1,0]]
         const rowBuildings = getSurrounding(x,y,rowRelativeCoords)
         for (i in rowBuildings){
             //check if its connected to another road
@@ -175,6 +173,14 @@ function destroyDrag(event){
     action = "destroy"
 }
 
+function newTurn(){
+    scoreLabel.innerHTML = score
+    turns += 1
+    turnNumber.innerText = turns
+    generateRandomBuilding()
+    checkIfGameOver()
+}
+
 //handle drop event
 function drop(ev) {
     ev.preventDefault();
@@ -188,15 +194,14 @@ function drop(ev) {
         if (!canPlace(x,y)) return
         placeBuilding(type, x, y);
         score += calculateScore(x,y,type)
-        scoreLabel.innerHTML = score
         scoreData[y][x] = score
-        generateRandomBuilding()
-        checkIfGameOver()
+        newTurn()
     }else{
         const targetId = ev.target.parentElement.id
         const [x, y] = targetId.split(',').map(Number);
         if (x == undefined || y == undefined) return
         destroyBuilding(x,y)
+        newTurn()
     }
     
 }
@@ -230,11 +235,6 @@ function checkIfGameOver(){
         finalScore.innerText = score
         isGameOver = true
     }
-}
-
-function updateTurn(){
-    turns += 1
-    turnNumber.innerText = turns
 }
 
 generateRandomBuilding()
