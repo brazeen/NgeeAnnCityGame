@@ -3,6 +3,7 @@ const coinLabel = document.getElementById("coins")
 const scoreLabel = document.getElementById("score")
 const gameoverpopup = document.getElementById("gameover-popup")
 const finalScore = document.getElementById("finalscore")
+const turnNumber = document.getElementById("turn")
 var coins = 16
 var turns = 1
 var score = 0
@@ -62,7 +63,7 @@ function placeBuilding(type, x, y){
     gridData[y][x] = type
     //update coins
     updateCoins(-1)
-    turns += 1
+    updateTurn()
     buildingCount += 1
 }
 
@@ -78,7 +79,7 @@ function destroyBuilding(x,y){
     //update grid data
     gridData[y][x] = ""
     updateCoins(1)
-    turns += 1
+    updateTurn()
     buildingCount -= 1
 }
 
@@ -229,6 +230,11 @@ function checkIfGameOver(){
         finalScore.innerText = score
         isGameOver = true
     }
+}
+
+function updateTurn(){
+    turns += 1
+    turnNumber.innerText = turns
 }
 
 generateRandomBuilding()
