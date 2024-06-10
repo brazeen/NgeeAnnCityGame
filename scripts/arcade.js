@@ -78,7 +78,7 @@ function destroyBuilding(x,y){
     spot.style.backgroundColor = ""
     //update grid data
     gridData[y][x] = ""
-    updateCoins(1)
+    updateCoins(-1)
     updateTurn()
     buildingCount -= 1
 }
