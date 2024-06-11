@@ -115,9 +115,9 @@ function getSurrounding(x,y, relativeCoords){
 
 function calculateScore(x,y,type){
     var finalScore = 0
+    const adjRelativeCoords = [[0,1],[0,-1],[1,0],[-1,0],[1,-1],[1,1],[-1,1],[-1,-1]] //relative coordinates of adjacent tiles
     //buildings that use adjacent scoring
     if (type in adjBuildingScores){
-        const adjRelativeCoords = [[0,1],[0,-1],[1,0],[-1,0],[1,-1],[1,1],[-1,1],[-1,-1]] //relative coordinates of adjacent tiles
         const buildingData = adjBuildingScores[type]
         const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
         //search for surrounding buildings that meet the database
@@ -131,8 +131,24 @@ function calculateScore(x,y,type){
             }
         }
 
+        //gernerate coin for commercial
+        if (type == "commercial"){
+            for (i in surroundBuildings){
+                if (surroundBuildings[i] == "residential"){
+                   updateCoins(1)
+                }
+            }
+        }
+
     }else if (type == "industry"){
         finalScore = 1
+        //generate coins
+        const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
+        for (i in surroundBuildings){
+            if (surroundBuildings[i] == "residential"){
+               updateCoins(1)
+            }
+        }
     }else if (type == "road"){
         const rowRelativeCoords = [[0,1],[0,-1],[1,0],[-1,0]]
         const rowBuildings = getSurrounding(x,y,rowRelativeCoords)
