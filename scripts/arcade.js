@@ -253,4 +253,29 @@ function checkIfGameOver(){
     }
 }
 
+function displaySaveGame(){
+    document.getElementById("savegame-popup").style.display = "flex"
+}
+
+function saveGame(){
+    //get save file name
+    const sname = document.getElementById("sname").value
+    console.log(sname)
+    //create object to save
+    const saveData = {
+        turn: turns,
+        coins: coins,
+        score: score,
+        gridData: gridData
+    }
+
+    //update list of save files
+    //if saveFiles storage doesnt exist, assign an empty array
+    saveFiles = (localStorage.getItem("saveFiles") == null)? [] : JSON.parse(localStorage.getItem("saveFiles"))
+    saveFiles.push(sname)
+    localStorage.setItem("saveFiles", JSON.stringify(saveFiles))
+
+    localStorage.setItem(sname,JSON.stringify(saveData))
+}
+
 generateRandomBuilding()
