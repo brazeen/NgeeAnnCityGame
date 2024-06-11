@@ -235,9 +235,9 @@ function drop(ev) {
         placeBuilding(type, x, y);
         score += calculateScore(x,y,type)
         scoreData[y][x] = score
-        newTurn()
         //update coin
         updateCoins(-1)
+        newTurn()
     }else{
         const targetId = ev.target.parentElement.id
         const [x, y] = targetId.split(',').map(Number);
@@ -271,11 +271,20 @@ function updateCoins(value = 0){
 
 function checkIfGameOver(){
     //check for game end
-    if (coins == 0 || buildingCount == gridSize[0]*gridSize[1]){
+    console.log(coins)
+    if (coins < 1 || buildingCount == gridSize[0]*gridSize[1]){
         
         gameoverpopup.style.display = "flex"
         finalScore.innerText = score
         isGameOver = true
+        //delete save file
+        const saveInput = document.getElementById("sname").value
+        if (saveInput){
+            localStorage.removeItem(`${saveInput}-save`)
+        }else if (playSave){
+            localStorage.removeItem(`${playSave}-save`)
+        }
+        
     }
 }
 
@@ -374,9 +383,8 @@ function saveGame(override = false){
 
 const beforeUnloadHandler = (event) => {
     //if user has not saved game, prompt them to save
-    if (!alreadySaved()){
+    if (!alreadySaved() && !isGameOver){
         event.preventDefault()
-        console.log("hi")
         displaySaveGame("leave")
     }
 }
