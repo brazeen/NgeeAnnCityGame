@@ -6,6 +6,8 @@ const finalScore = document.getElementById("finalscore")
 const turnNumber = document.getElementById("turn")
 const saveGamePopup = document.getElementById("savegame-popup")
 const repeatFile = document.getElementById("repeat-file")
+
+
 var coins = 16
 var turns = 1
 var score = 0
@@ -54,6 +56,27 @@ for (var y = 0; y < gridSize[0]; y++){
     scoreData.push(scoreRow)
 }
 
+//load game
+const playSave = localStorage.getItem("playSave")
+if (playSave != null){
+    const save = JSON.parse(localStorage.getItem(`${playSave}-save`))
+    lastSave = save
+    coins = save.coins
+    turns = save.turn
+    score = save.score
+    gridData = save.gridData
+    //update html elements
+    coinLabel.innerText = coins
+    scoreLabel.innerText = score
+    turnNumber.innerText = turns
+    for (var y = 0; y < gridData.length; y++){
+        for (var x = 0; x < gridData[0].length; x++){
+            if (gridData[y][x]) placeBuilding(gridData[y][x],x,y)
+        }
+    }
+
+}
+
 function placeBuilding(type, x, y){
     const spot = document.getElementById(`${x},${y}`)
     //display image in spot
@@ -64,8 +87,6 @@ function placeBuilding(type, x, y){
     spot.style.backgroundColor = ""
     //update grid data
     gridData[y][x] = type
-    //update coins
-    updateCoins(-1)
     buildingCount += 1
 }
 
@@ -215,6 +236,8 @@ function drop(ev) {
         score += calculateScore(x,y,type)
         scoreData[y][x] = score
         newTurn()
+        //update coin
+        updateCoins(-1)
     }else{
         const targetId = ev.target.parentElement.id
         const [x, y] = targetId.split(',').map(Number);
@@ -261,6 +284,7 @@ var saveType = "normal"
 
 function executePostSave(){
     repeatFile.style.display = "none"
+    document.getElementById('save-success').style.display = 'none'
     console.log(saveType)
     if(saveType == "exit"){
         window.location='./index.html'
@@ -271,7 +295,6 @@ function displaySaveGame(type = "normal"){
     if (type != "none") saveType = type
     if (lastSave){
         updateSave()
-        executePostSave()
         return
     }
     saveGamePopup.style.display = "flex"
@@ -313,8 +336,9 @@ const alreadySaved = () => shallowEqual(lastSave, createSaveObj())
 
 function updateSave(name){
     const saveData = createSaveObj()
-    localStorage.setItem(name, JSON.stringify(saveData))
+    localStorage.setItem(`${name}-save`, JSON.stringify(saveData))
     lastSave = saveData
+    //show success message
     document.getElementById("save-success").style.display = "flex"
 }
 
@@ -339,7 +363,7 @@ function saveGame(override = false){
     localStorage.setItem("saveFiles", JSON.stringify(saveFiles))
     updateSave(sname)
     saveGamePopup.style.display = "none"
-    executePostSave()
+    repeatFile.style.display = "none"
 
 }
 
