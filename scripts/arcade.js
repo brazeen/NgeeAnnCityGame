@@ -4,6 +4,8 @@ const scoreLabel = document.getElementById("score")
 const gameoverpopup = document.getElementById("gameover-popup")
 const finalScore = document.getElementById("finalscore")
 const turnNumber = document.getElementById("turn")
+const saveGamePopup = document.getElementById("savegame-popup")
+const repeatFile = document.getElementById("repeat-file")
 var coins = 16
 var turns = 1
 var score = 0
@@ -12,6 +14,7 @@ var action = ""
 updateCoins()
 const gridSize = [20,20]
 var buildingCount = 0 //track number buildings so we know when all tiles are filled
+var lastSave = null //check if user has saved game
 const buildings = {
     "residential": [1,1],
     "industry": [2,1]
@@ -253,29 +256,102 @@ function checkIfGameOver(){
     }
 }
 
-function displaySaveGame(){
-    document.getElementById("savegame-popup").style.display = "flex"
+
+var saveType = "normal"
+
+function executePostSave(){
+    repeatFile.style.display = "none"
+    console.log(saveType)
+    if(saveType == "exit"){
+        window.location='./index.html'
+    }
 }
 
-function saveGame(){
-    //get save file name
-    const sname = document.getElementById("sname").value
-    console.log(sname)
-    //create object to save
-    const saveData = {
+function displaySaveGame(type = "normal"){
+    if (type != "none") saveType = type
+    if (lastSave){
+        updateSave()
+        executePostSave()
+        return
+    }
+    saveGamePopup.style.display = "flex"
+    repeatFile.style.display = "none"
+    if (type == "leave" || type == "exit") document.getElementById("save-game").innerText += "?"
+}
+
+//check if the content of 2 objects are the same
+function shallowEqual(object1, object2) {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+  
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+  
+    for (let key of keys1) {
+      if (object1[key] !== object2[key]) {
+        return false;
+      }
+    }
+  
+    return true;
+  }
+
+function createSaveObj(){
+    return {
+        type: "arcade",
         turn: turns,
         coins: coins,
         score: score,
         gridData: gridData
     }
+}
 
+//check if the user has already saved
+const alreadySaved = () => shallowEqual(lastSave, createSaveObj())
+
+function updateSave(name){
+    const saveData = createSaveObj()
+    localStorage.setItem(name, JSON.stringify(saveData))
+    lastSave = saveData
+    document.getElementById("save-success").style.display = "flex"
+}
+
+function saveGame(override = false){
+    //get save file name
+    const sname = document.getElementById("sname").value
+    if (!sname) return
     //update list of save files
     //if saveFiles storage doesnt exist, assign an empty array
     saveFiles = (localStorage.getItem("saveFiles") == null)? [] : JSON.parse(localStorage.getItem("saveFiles"))
-    saveFiles.push(sname)
+    //check if save file already exists
+    if (saveFiles.includes(sname)){
+        if (!override){
+            saveGamePopup.style.display = "none"
+            repeatFile.style.display = "flex"
+            document.getElementById("repeat-title").innerText = `Another save file with the name ${sname} has been found. Do you want to override it?`
+            return
+        }
+    }else{
+        saveFiles.push(sname)
+    }
     localStorage.setItem("saveFiles", JSON.stringify(saveFiles))
+    updateSave(sname)
+    saveGamePopup.style.display = "none"
+    executePostSave()
 
-    localStorage.setItem(sname,JSON.stringify(saveData))
 }
+
+
+const beforeUnloadHandler = (event) => {
+    //if user has not saved game, prompt them to save
+    if (!alreadySaved()){
+        event.preventDefault()
+        console.log("hi")
+        displaySaveGame("leave")
+    }
+}
+
+window.addEventListener("beforeunload", beforeUnloadHandler)
 
 generateRandomBuilding()

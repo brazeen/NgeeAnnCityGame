@@ -16,7 +16,7 @@
         <div style="margin-left: 5rem;">Score: <span id = "score">0</span></div>
     </div>
     <button style="display: block;" onclick = "displaySaveGame()">Save Game</button>
-    <button style="display: block;" onclick="window.location='./index.html'">Exit To Main Menu</button>
+    <button style="display: block;" onclick="displaySaveGame('exit')">Exit To Main Menu</button>
     <img src="./assets/dismantle.png", style="width: 70px;" draggable="true" ondragstart="destroyDrag(event)">
     <h4>Drag one of the buildings to the grid to build.</h4>
     <div id="randombuilding-grid">
@@ -35,14 +35,28 @@
         <button onclick="window.location.href='index.html';">Exit</button>
     </div>
 
-    <div id = "savegame-popup">
-        <h3>Save Arcade Game</h3>
+    <div id = "savegame-popup" class = "savegame-popup">
+        <h3 id = "save-game">Save Arcade Game</h3>
         <div>
         <label for="fname">Save file name:</label>
         <input type="text" id="sname" name="sname">
         </div>
         <button style="margin-top: 15vh;" onclick="saveGame()">Save</button>
     </div>
+
+    <div id = "repeat-file" class = "savegame-popup">
+        <h3 style="margin-top: 5vh;" id = "repeat-title">Another save file with the name has been found. Do you want to override it?</h3>
+        <div style="display: flex; margin-top: 20vh;">
+        <button style = "margin-right: 6vw;" onclick="saveGame(true)">Yes</button>
+        <button onclick="displaySaveGame('none')">No</button>
+        </div>
+    </div>
+
+    <div id = "save-success" class = "savegame-popup">
+        <h3 style="margin-top: 5vh;" id = "repeat-title">Game Saved successfully</h3>
+        <button style = "margin-right: 6vw;" onclick="document.getElementById('save-success').style.display = 'none'">Ok</button>
+    </div>
+
     <script src="./scripts/arcade.js"></script>
 </body>
 </html>
