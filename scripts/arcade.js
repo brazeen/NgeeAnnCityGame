@@ -339,6 +339,10 @@ function updateSave(name){
     localStorage.setItem(`${name}-save`, JSON.stringify(saveData))
     lastSave = saveData
     //show success message
+    if (saveType == "exit" && alreadySaved()){
+        executePostSave()
+        return
+    }
     document.getElementById("save-success").style.display = "flex"
 }
 
