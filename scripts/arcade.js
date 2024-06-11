@@ -281,6 +281,7 @@ function displaySaveGame(type = "normal"){
 
 //check if the content of 2 objects are the same
 function shallowEqual(object1, object2) {
+    if (object1 == null || object2 == null) return false
     const keys1 = Object.keys(object1);
     const keys2 = Object.keys(object2);
   
