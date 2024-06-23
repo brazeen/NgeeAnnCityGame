@@ -9,6 +9,7 @@
 
 #indexBody {
     padding: 20vh;
+    padding-top: 40px;
     background: url(../assets/cityscape.jpg);
     background-size: cover;
     font-family: "Oswald", sans-serif;
@@ -16,16 +17,18 @@
     font-weight: 200;
     font-style: normal;
     font-size: 30px;
+
 }
 
 .indexBtn {
     border-radius: 12px;
-    padding: 20px;
-    margin: 4px 2px;
+    padding: 25px;
+    margin: 10px 0;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     border-color: rgb(241, 193, 18);
     background-color: rgb(241, 193, 18);
     transition: ease-in-out 0.3s;
+
 }
 
 .indexBtn:hover{
@@ -35,7 +38,7 @@
     margin: 4px 2px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     border-color: rgb(241, 193, 18);
-    background-color: white
+    background-color: gold
 }
 
 /* Arcade */
