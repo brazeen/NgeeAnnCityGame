@@ -4,9 +4,13 @@
     <link rel="stylesheet" href="CSS/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Import Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <title>Arcade Mode | Ngee Ann City</title>
 </head>
-<body>
+<body id="arcadeBody">
     <div class = "top-stats">
         <div style="margin-right: 5rem;">Turn <span id = "turn">1</span></div>
         <div class = "img-txt">
@@ -15,8 +19,8 @@
         </div>
         <div style="margin-left: 5rem;">Score: <span id = "score">0</span></div>
     </div>
-    <button style="display: block;" onclick = "displaySaveGame()">Save Game</button>
-    <button style="display: block;" onclick="displaySaveGame('exit')">Exit To Main Menu</button>
+    <button class="arcadeBtn" style="display: block;" onclick = "displaySaveGame()">Save Game</button>
+    <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame('exit')">Exit To Main Menu</button>
     <img src="./assets/dismantle.png", style="width: 70px;" draggable="true" ondragstart="destroyDrag(event)">
     <h4>Drag one of the buildings to the grid to build.</h4>
     <div id="randombuilding-grid">
