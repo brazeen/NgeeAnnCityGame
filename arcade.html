@@ -18,11 +18,14 @@
             <div id = "coins">0</div>
         </div>
         <div style="margin-left: 5rem;">Score: <span id = "score">0</span></div>
+        <div style="display: flex; margin-left: auto;">
+            <button class="arcadeBtn" style="display: block;" onclick = "displaySaveGame()">Save Game</button>
+            <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame('exit')">Exit To Main Menu</button>
+        </div>
     </div>
-    <button class="arcadeBtn" style="display: block;" onclick = "displaySaveGame()">Save Game</button>
-    <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame('exit')">Exit To Main Menu</button>
+    <h4 style="font-size: 22px;">Drag the bulldozer over a building to demolish it.</h4>
     <img src="./assets/dismantle.png", style="width: 70px;" draggable="true" ondragstart="destroyDrag(event)">
-    <h4>Drag one of the buildings to the grid to build.</h4>
+    <h4 style="font-size: 22px;">Drag a building to the grid to build.</h4>
     <div id="randombuilding-grid">
         <div id="randombuilding-1" class = "randombuilding">
 

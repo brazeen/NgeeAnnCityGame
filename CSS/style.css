@@ -75,16 +75,16 @@
 
 #game-grid{
     display: grid; 
-    grid-template-columns: repeat(20, minmax(0, 1fr)); 
-    grid-template-rows: repeat(20, minmax(0, 1fr)); 
-    width: 80%; 
-    aspect-ratio: 1/1;
+    grid-template-columns: repeat(20, 70px); 
+    grid-template-rows: repeat(20,70px); 
+    row-gap: 0;
+    column-gap: 0;
+    height: 300px;
+    width: 80%;
     border: 1px solid black;
-}
-
-.game-grid-container{
-    width: 100%;
-    margin-top: 5vw;
+    overflow: scroll;
+    margin: auto;
+    margin-top: 5vw !important;
 }
 
 .grid-spot{
