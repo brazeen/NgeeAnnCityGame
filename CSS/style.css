@@ -78,7 +78,7 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin-left: 15vw;
+    margin-left: 35vw;
 }
 
 #bulldozer {
@@ -89,6 +89,13 @@
 
 #bulldozer:hover {
     transform: scale(1.2); /* Scale up by 20% on hover */
+}
+
+.buildings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 #game-grid{
@@ -102,7 +109,7 @@
     border: 1px solid black;
     overflow: scroll;
     margin: auto;
-    margin-top: 5vw !important;
+    margin-top: 1vw !important;
 }
 
 .grid-spot{
