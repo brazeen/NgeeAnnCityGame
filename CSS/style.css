@@ -73,6 +73,24 @@
     background-color: rgb(241, 193, 18);
 }
 
+.bulldozer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-left: 15vw;
+}
+
+#bulldozer {
+    width: 70px;
+    margin-top: 10px;
+    transition: transform 0.3s ease-in-out; /* Smooth transition for scaling */
+}
+
+#bulldozer:hover {
+    transform: scale(1.2); /* Scale up by 20% on hover */
+}
+
 #game-grid{
     display: grid; 
     grid-template-columns: repeat(20, 70px); 
@@ -89,6 +107,11 @@
 
 .grid-spot{
     border: 1px solid black;
+}
+
+.grid-spot:hover {
+    background-color: aliceblue;
+    transition: ease-in-out, 0.3s;
 }
 
 #randombuilding-grid {
