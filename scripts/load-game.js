@@ -14,15 +14,15 @@ function loadGame(){
         const save = JSON.parse(localStorage.getItem(`${saveFiles[i]}-save`))
         if (save == null) continue //ensure that save exists
         savedGames.innerHTML += `
-        <div style="margin-bottom: 5vh;">
-            <h3 style="font-size: 20px; margin-bottom: 0px;">${saveFiles[i]}</h3>
+        <div class = "load-game-container">
+            <h3 style="font-size: 22px; margin-bottom: 1vw;">${saveFiles[i]}</h3>
             <div style="font-size: 17px;">${capitalize(save.type)} Mode</div>
-            <div style="color: #2F2F2F;">
+            <div style="color: #2F2F2F; font-size: 16px;">
                 <div>Turn ${save.turn}</div>
                 <div>Coins: ${save.coins}</div>
                 <div>Score: ${save.score}</div>
             </div>
-            <button id = ${saveFiles[i]} onclick="startGame(this.id)">Play</button>
+            <button id = ${saveFiles[i]} class = "load-game-button" onclick="startGame(this.id)">Play</button>
         </div>
         `
         console.log(save)
