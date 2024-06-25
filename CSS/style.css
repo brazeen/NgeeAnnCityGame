@@ -17,7 +17,8 @@
     font-weight: 200;
     font-style: normal;
     font-size: 30px;
-    min-height: 100vh;
+    height: 100vh;
+    overflow-y: hidden;
 
 }
 

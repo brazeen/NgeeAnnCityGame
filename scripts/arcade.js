@@ -16,7 +16,6 @@ var action = ""
 updateCoins()
 const gridSize = [20,20]
 var buildingCount = 0 //track number buildings so we know when all tiles are filled
-var lastSave = null //check if user has saved game
 const buildings = {
     "residential": [1,1],
     "industry": [2,1]
@@ -56,8 +55,10 @@ for (var y = 0; y < gridSize[0]; y++){
     scoreData.push(scoreRow)
 }
 
+var lastSave = createSaveObj() //store previous save data
+
 //load game
-const playSave = localStorage.getItem("playSave")
+var playSave = localStorage.getItem("playSave")
 if (playSave != null){
     const save = JSON.parse(localStorage.getItem(`${playSave}-save`))
     lastSave = save
@@ -302,7 +303,12 @@ function executePostSave(){
 
 function displaySaveGame(type = "normal"){
     if (type != "none") saveType = type
-    if (lastSave){
+    console.log(lastSave)
+    if (type == "exit" && alreadySaved()){
+        executePostSave()
+        return
+    }
+    if (playSave != null){
         updateSave()
         return
     }
@@ -343,12 +349,12 @@ function createSaveObj(){
 //check if the user has already saved
 const alreadySaved = () => shallowEqual(lastSave, createSaveObj())
 
-function updateSave(name){
+function updateSave(){
     const saveData = createSaveObj()
-    localStorage.setItem(`${name}-save`, JSON.stringify(saveData))
+    localStorage.setItem(`${playSave}-save`, JSON.stringify(saveData))
     lastSave = saveData
     //show success message
-    if (saveType == "exit" && alreadySaved()){
+    if (saveType == "exit"){
         executePostSave()
         return
     }
@@ -374,7 +380,8 @@ function saveGame(override = false){
         saveFiles.push(sname)
     }
     localStorage.setItem("saveFiles", JSON.stringify(saveFiles))
-    updateSave(sname)
+    playSave = sname
+    updateSave()
     saveGamePopup.style.display = "none"
     repeatFile.style.display = "none"
 
