@@ -1,5 +1,4 @@
 /* Index */
-
 #indexDiv {
     display: flex;
     flex-direction: column;
@@ -24,16 +23,15 @@
 
 .indexBtn {
     border-radius: 12px;
-    padding: 25px;
+    padding: 20px;
     margin: 10px 0;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     border-color: rgb(241, 193, 18);
     background-color: rgb(241, 193, 18);
     transition: ease-in-out 0.3s;
-
 }
 
-.indexBtn:hover{
+.indexBtn:hover {
     cursor: pointer;
     border-radius: 12px;
     padding: 19px;
@@ -44,7 +42,6 @@
 }
 
 /* Arcade */
-
 #arcadeBody {
     background: rgb(216, 146, 15);
     font-family: "Oswald", sans-serif;
@@ -64,7 +61,7 @@
     transition: ease-in-out 0.3s;
 }
 
-.arcadeBtn:hover{
+.arcadeBtn:hover {
     cursor: pointer;
     border-radius: 8px;
     padding: 10px;
@@ -74,10 +71,41 @@
     background-color: rgb(241, 193, 18);
 }
 
-#game-grid{
+/* Parent container for bulldozer and buildings */
+.action-containers {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
+}
+
+.bulldozer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+#bulldozer {
+    width: 70px;
+    margin-top: 10px;
+    transition: transform 0.3s ease-in-out; /* Smooth transition for scaling */
+}
+
+#bulldozer:hover {
+    transform: scale(1.2); /* Scale up by 20% on hover */
+}
+
+.buildings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+#game-grid {
     display: grid; 
     grid-template-columns: repeat(20, 70px); 
-    grid-template-rows: repeat(20,70px); 
+    grid-template-rows: repeat(20, 70px); 
     row-gap: 0;
     column-gap: 0;
     height: 25vw;
@@ -85,11 +113,16 @@
     border: 1px solid black;
     overflow: scroll;
     margin: auto;
-    margin-top: 5vw !important;
+    margin-top: 1vw !important;
 }
 
-.grid-spot{
+.grid-spot {
     border: 1px solid black;
+}
+
+.grid-spot:hover {
+    background-color: aliceblue;
+    transition: ease-in-out, 0.3s;
 }
 
 #randombuilding-grid {
@@ -99,25 +132,25 @@
     width: 130px;
     border: 1px solid black;
     aspect-ratio: 2;
-    }
+}
 
-#randombuilding-1, #randombuilding-2{
+#randombuilding-1, #randombuilding-2 {
     border: 1px solid black;
 }
 
-.top-stats{
+.top-stats {
     font-size: 2rem;
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 3vw;
 }
 
-.img-txt{
+.img-txt {
     display: flex;
     align-items: center;
 }
 
-.img-txt img{
+.img-txt img {
     height: 2rem;
     margin-right: 1rem;
 }
@@ -166,7 +199,7 @@
     align-items: center;
 }
 
-.load-game-container{
+.load-game-container {
     margin-bottom: 5vh;
     border-radius: 10px;
     background-color: rgb(241, 193, 18);
@@ -174,9 +207,11 @@
     display: inline-block;
 }
 
-.load-game-button{
+.load-game-button {
     border-radius: 5px;
     padding: 0.5vw 1vw;
     margin-top: 1.1vw;
     background: none;
 }
+
+

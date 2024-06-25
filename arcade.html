@@ -23,21 +23,17 @@
             <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame('exit')">Exit To Main Menu</button>
         </div>
     </div>
-    <div style="display: flex;">
-        <div>
+    <div class="action-containers">
+        <div class="buildings-container">
             <h4 style="font-size: 22px;">Drag a building to the grid to build.</h4>
             <div id="randombuilding-grid">
-                <div id="randombuilding-1" class = "randombuilding">
-
-                </div>
-                <div id="randombuilding-2" class = "randombuilding">
-                    
-                </div>
+                <div id="randombuilding-1" class="randombuilding"></div>
+                <div id="randombuilding-2" class="randombuilding"></div>
             </div>
         </div>
-        <div style="margin-left: 15vw;">
+        <div class="bulldozer-container">
             <h4 style="font-size: 22px;">Drag the bulldozer over a building to demolish it.</h4>
-            <img src="./assets/dismantle.png", style="width: 70px;" draggable="true" ondragstart="destroyDrag(event)">
+            <img id="bulldozer" src="./assets/dismantle.png" style="width: 70px;" draggable="true" ondragstart="destroyDrag(event)">
         </div>
     </div>
     
@@ -45,6 +41,7 @@
         <div id = "game-grid">
         </div>
     </div>
+
     <div id="gameover-popup">
         <p>Nice try! Your score was <span id="finalscore"></span></p>
         <button onclick="window.location.href='index.html';">Exit</button>
