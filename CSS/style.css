@@ -214,4 +214,33 @@
     background: none;
 }
 
+#leaderboardBody {
+    padding: 20vh;
+    padding-top: 40px;
+    background: url(../assets/cityscape.jpg);
+    background-size: cover;
+    font-family: "Oswald", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    font-size: 30px;
+    overflow-y: auto;
+}
 
+#leaderboardDiv {
+    display: flex;
+    height: 100%;
+    flex-wrap:wrap;
+}
+
+#leftSideDiv, #rightSideDiv {
+    flex: 1;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    border-radius: 10px;
+    margin: 0 20px;
+    background-color: rgba(184, 184, 184, 0.9);
+    min-width: 500px;
+    flex-direction: column;
+}
