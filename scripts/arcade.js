@@ -286,7 +286,36 @@ function checkIfGameOver(){
             localStorage.removeItem(`${playSave}-save`)
         }
         
+        //get localStorage list
+        let lblist = localStorage.getItem("arcadeLeaderboard")
+        lblist = updateLeaderboard(score, lblist)
+        localStorage.setItem("arcadeLeaderboard", lblist)
     }
+}
+
+function updateLeaderboard(score, leaderboard) {
+    //ensure leaderboard array has at most 10 elements
+    if (leaderboard.length > 10) {
+        leaderboard = leaderboard.slice(0, 10);
+    }
+
+    //check if the score is higher than the score in the tenth place
+    if (leaderboard.length < 10 || score > leaderboard[leaderboard.length - 1].score) {
+        // Create the new entry
+        const name = "tester";
+        const newEntry = { name, score };
+
+        // Insert the new entry into the correct position in the sorted array
+        leaderboard.push(newEntry);
+        leaderboard.sort((a, b) => b.score - a.score);
+
+        // If the array now has more than 10 elements, remove the last one
+        if (leaderboard.length > 10) {
+            leaderboard.pop();
+        }
+    }
+
+    return leaderboard;
 }
 
 
