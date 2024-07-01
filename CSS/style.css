@@ -41,6 +41,23 @@
     background-color: gold
 }
 
+@media (max-width: 768px) {
+    #indexBody {
+        padding: 10vh;  /* Reduce padding */
+        font-size: 24px; /* Adjust font size */
+        text-align: center;
+    }
+
+    #indexDiv {
+        flex-direction: column; /* Stack everything vertically */
+    }
+
+    .indexBtn {
+        width: 90%;   /* Make buttons wider */
+        margin: 5px 0; /* Adjust button spacing */
+    }
+}
+
 /* Arcade */
 #arcadeBody {
     background: rgb(216, 146, 15);
