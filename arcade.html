@@ -70,5 +70,12 @@
     </div>
 
     <script src="./scripts/arcade.js"></script>
+    <script>
+        window.onload = function() {
+            document.body.onselectstart = function() {
+                return false;
+            }
+        }
+    </script>
 </body>
 </html>
