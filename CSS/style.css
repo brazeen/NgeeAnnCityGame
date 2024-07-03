@@ -1,3 +1,31 @@
+@media (min-width: 1200px) {
+    html{
+        font-size: 16px;
+    }   
+
+}
+
+@media (max-width: 1200px) {
+    html{
+        font-size: 14px;
+    }   
+
+}
+
+@media (max-width: 900px) {
+    html{
+        font-size: 12px;
+    }   
+
+}
+
+@media (max-width: 700px) {
+    html{
+        font-size: 10px;
+    }   
+
+}
+
 /* Index */
 #indexDiv {
     display: flex;
@@ -72,6 +100,7 @@
     border-radius: 8px;
     padding: 10px;
     margin: 4px 2px;
+    font-size: 0.9rem;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     border: none;
     background-color: whitesmoke;
@@ -126,7 +155,7 @@
     row-gap: 0;
     column-gap: 0;
     height: 25vw;
-    width: 80%;
+    width: min(100%,calc((70px * 20) + 18px)); /*if the grid can shrink to fit its contents, shrink*/
     border: 1px solid black;
     overflow: scroll;
     margin: auto;

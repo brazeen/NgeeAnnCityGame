@@ -216,6 +216,15 @@ function destroyDrag(event){
 }
 
 function newTurn(){
+    //recalculates score and generate coins
+    score = 0
+    for (var y = 0; y < gridData.length; y++){
+        for (var x = 0; x < gridData[0].length; x++){
+            const type = gridData[y][x]
+            if (type) score += calculateScore(x,y,type)
+        }
+    }
+
     scoreLabel.innerHTML = score
     turns += 1
     turnNumber.innerText = turns
@@ -235,8 +244,6 @@ function drop(ev) {
         const type = img.getAttribute("data-type");
         if (!canPlace(x,y)) return
         placeBuilding(type, x, y);
-        score += calculateScore(x,y,type)
-        scoreData[y][x] = score
         //update coin
         updateCoins(-1)
         newTurn()
