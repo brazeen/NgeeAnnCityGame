@@ -192,15 +192,22 @@ function calculateScore(x,y,type){
     if (type in adjBuildingScores){
         const buildingData = adjBuildingScores[type]
         const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
+        let exitLoop = false
         //search for surrounding buildings that meet the database
         for (i in buildingData){
             data = buildingData[i]
             for (j in surroundBuildings){
                 if (data[0] == surroundBuildings[j]){
-                    if (data[2]) return data[1]
+                    if (data[2]){ //check if the "only" constrain is true, limit the score no matter the surrounding buiildings
+                        finalScore = data[1]
+                        //stop evaluating anymore buildings
+                        exitLoop = true
+                        break
+                    }
                     finalScore += data[1]
                 }
             }
+            if (exitLoop) break
         }
 
         //gernerate coin for commercial
@@ -224,13 +231,8 @@ function calculateScore(x,y,type){
     }else if (type == "road"){
         const rowRelativeCoords = [[0,1],[0,-1],[1,0],[-1,0]]
         const rowBuildings = getSurrounding(x,y,rowRelativeCoords)
-        for (i in rowBuildings){
-            //check if its connected to another road
-            if (rowBuildings[i] == "road"){
-                finalScore = 1
-                break
-            }
-        }
+        finalScore = rowBuildings.filter(x => x === "road").length
+        
     }
     updateCoins(finalCoins)
     return {score: finalScore, coins:finalCoins}
