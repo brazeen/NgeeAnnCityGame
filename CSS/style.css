@@ -154,7 +154,7 @@
     grid-template-rows: repeat(20, 70px); 
     row-gap: 0;
     column-gap: 0;
-    height: 25vw;
+    height: 100%;
     width: min(100%,calc((70px * 20) + 18px)); /*if the grid can shrink to fit its contents, shrink*/
     border: 1px solid black;
     overflow: scroll;
@@ -222,12 +222,6 @@
 
 #gameover-popup button {
     padding: 10px 15px;
-}
-
-@media(max-width: 900px) {
-    #game-grid {
-        width: 100%;
-    }
 }
 
 .savegame-popup {

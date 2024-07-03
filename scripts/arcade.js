@@ -434,4 +434,14 @@ const beforeUnloadHandler = (event) => {
 
 window.addEventListener("beforeunload", beforeUnloadHandler)
 
+
+function setGridHeight() {
+    const gridY = grid.getBoundingClientRect().top
+    console.log()
+    console.log(`${window.innerHeight - gridY}px`)
+    grid.style.height = `${(window.innerHeight*0.98 - gridY)}px`
+}
+setGridHeight()
+window.onresize = setGridHeight;
+
 generateRandomBuilding()
