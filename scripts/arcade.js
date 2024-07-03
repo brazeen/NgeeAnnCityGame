@@ -6,8 +6,9 @@ const finalScore = document.getElementById("finalscore")
 const turnNumber = document.getElementById("turn")
 const saveGamePopup = document.getElementById("savegame-popup")
 const repeatFile = document.getElementById("repeat-file")
+const initialsPopup = document.getElementById("initials-popup")
 
-
+//to test, i set to 2
 var coins = 16
 var turns = 1
 var score = 0
@@ -277,53 +278,76 @@ function updateCoins(value = 0){
     coinLabel.innerText = coins
 }
 
-function checkIfGameOver(){
-    //check for game end
-    console.log(coins)
-    if (coins < 1 || buildingCount == gridSize[0]*gridSize[1]){
-        
-        gameoverpopup.style.display = "flex"
-        finalScore.innerText = score
-        isGameOver = true
-        //delete save file
-        const saveInput = document.getElementById("sname").value
-        if (saveInput){
-            localStorage.removeItem(`${saveInput}-save`)
-        }else if (playSave){
-            localStorage.removeItem(`${playSave}-save`)
-        }
-        
-        //get localStorage list
-        let lblist = localStorage.getItem("arcadeLeaderboard")
-        lblist = updateLeaderboard(score, lblist)
-        localStorage.setItem("arcadeLeaderboard", lblist)
+function checkIfGameOver() {
+    // Check for game end
+    if (coins < 1 || buildingCount == gridSize[0] * gridSize[1]) {
+      isGameOver = true;
+  
+      let lblist = localStorage.getItem("arcadeLeaderboard");
+      if (!lblist) {
+        lblist = [];
+      } else {
+        lblist = JSON.parse(lblist);
+      }
+  
+      // Update leaderboard and store after update
+      updateLeaderboard(score, lblist);
+      
+  
+      // Delete save file (optional)
+      const saveInput = document.getElementById("sname").value;
+      if (saveInput) {
+        localStorage.removeItem(`${saveInput}-save`);
+      } else if (playSave) {
+        localStorage.removeItem(`${playSave}-save`);
+      }
+  
+      // Display game over popup
+      gameoverpopup.style.display = "flex";
+      finalScore.innerText = score;
     }
-}
-
-function updateLeaderboard(score, leaderboard) {
-    //ensure leaderboard array has at most 10 elements
+  }
+  
+  function updateLeaderboard(score, leaderboard) {
+    // Ensure leaderboard array has at most 10 elements
     if (leaderboard.length > 10) {
         leaderboard = leaderboard.slice(0, 10);
     }
 
-    //check if the score is higher than the score in the tenth place
-    if (leaderboard.length < 10 || score > leaderboard[leaderboard.length - 1].score) {
-        // Create the new entry
-        const name = "tester";
-        const newEntry = { name, score };
+    // Check if the score is higher than the score in the tenth place
+    if (leaderboard.length < 10 || score > leaderboard[leaderboard.length - 1]?.score) {
+        initialsPopup.style.display = "flex";
 
-        // Insert the new entry into the correct position in the sorted array
-        leaderboard.push(newEntry);
-        leaderboard.sort((a, b) => b.score - a.score);
+        // Add a one-time event listener for the form submission
+        document.getElementById('initialsForm').addEventListener('submit', function onSubmit(event) {
+            event.preventDefault(); // Prevent default form submission
+            initialsPopup.style.display = "none";
 
-        // If the array now has more than 10 elements, remove the last one
-        if (leaderboard.length > 10) {
-            leaderboard.pop();
-        }
+            // Perform any action with the submitted initials here
+            const initials = document.getElementById('initials').value;
+            console.log(initials);
+            const newEntry = { name: initials, score: score };
+
+            // Insert the new entry and sort immediately (regardless of length)
+            leaderboard.push(newEntry);
+            leaderboard.sort((a, b) => b.score - a.score);
+
+            // If the array now has more than 10 elements, remove the last one
+            if (leaderboard.length > 10) {
+                leaderboard.pop();
+            }
+
+            // Update local storage with the new leaderboard
+            localStorage.setItem("arcadeLeaderboard", JSON.stringify(leaderboard));
+
+            // Clean up event listener to prevent memory leaks
+            document.getElementById('initialsForm').removeEventListener('submit', onSubmit);
+        }); // Ensure the event listener is triggered only once
     }
-
-    return leaderboard;
 }
+
+  
+  
 
 
 var saveType = "normal"
