@@ -26,6 +26,13 @@
 
 }
 
+@media (max-width: 560px) {
+    html{
+        font-size: 8px;
+    }   
+
+}
+
 /* Index */
 #indexDiv {
     display: flex;
@@ -150,12 +157,12 @@
 
 #game-grid {
     display: grid; 
-    grid-template-columns: repeat(20, 70px); 
-    grid-template-rows: repeat(20, 70px); 
+    grid-template-columns: repeat(20, 4.375rem); 
+    grid-template-rows: repeat(20, 4.375rem); 
     row-gap: 0;
     column-gap: 0;
     height: 100%;
-    width: min(100%,calc((70px * 20) + 18px)); /*if the grid can shrink to fit its contents, shrink*/
+    width: min(100%,calc((4.375rem * 20) + 18px)); /*if the grid can shrink to fit its contents, shrink*/
     border: 1px solid black;
     overflow: scroll;
     margin: auto;
@@ -175,7 +182,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 1fr;
-    width: 140px;
+    width: 8.75rem;
     border: 1px solid black;
     aspect-ratio: 2;
 }

@@ -68,6 +68,7 @@ if (playSave != null){
     turns = save.turn
     score = save.score
     gridData = save.gridData
+    scoreData = save.scoreData
     //update html elements
     coinLabel.innerText = coins
     scoreLabel.innerText = score
@@ -88,9 +89,25 @@ const buildingDesc = {
     road: "Per road in a row: 1 point",
 }
 
-function showTooltip(e){
-    //get the parent's id and use it to get the associated tooltip
-    const parentID = e.parentElement.id
+//show tooltip for placed buildings
+function showPlacedTooltip(e){
+    //display building name, score value, coin generation
+    //get the parent's element to get the x and y value
+    const parentEle = e.parentElement
+    const [xPos,yPos] = parentEle.id.split(",")
+    const {score, coins} = scoreData[yPos][xPos]
+    //display tooltip horizontally-centered, bottom of the building img
+    const rect = e.getBoundingClientRect()
+    tooltip.style.left = `${rect.left}px`
+    tooltip.style.top = `${(rect.top + rect.height)*1.01}px`
+    tooltip.style.visibility = "visible"
+    const type = parentEle.classList[1] //get type from parent element
+    const tooltipContent = `${type}\nScore Value: ${score}\nCoins per turn:${coins}`
+    tooltip.innerHTML = tooltipContent.replaceAll("\n","<br>")
+}
+
+//show tooltips for random buildings
+function showRandomTooltip(e){
     const rect = e.getBoundingClientRect()
 
     //display tooltip horizontally-centered, bottom of the building img
@@ -110,7 +127,7 @@ function hideTooltip(){
 function placeBuilding(type, x, y){
     const spot = document.getElementById(`${x},${y}`)
     //display image in spot
-    spot.innerHTML = `<img src="./assets/${type}.png" width="100%" draggable = "false"></img>`
+    spot.innerHTML = `<img src="./assets/${type}.png" width="100%" draggable = "false" onmouseover="showPlacedTooltip(this)" onmouseleave="hideTooltip()"></img>`
     //add class
     spot.classList.add(type)
     //reset background color
@@ -149,8 +166,8 @@ function generateRandomBuilding(){
     choice2 = typeList[choice2]
     const randomdiv1 = document.getElementById('randombuilding-1')
     const randomdiv2 = document.getElementById('randombuilding-2')
-    randomdiv1.innerHTML = `<img src="./assets/${choice1}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building1" data-type="${choice1}" onmouseover="showTooltip(this)" onmouseleave="hideTooltip()"></img>`
-    randomdiv2.innerHTML = `<img src="./assets/${choice2}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building2" data-type="${choice2}" onmouseover="showTooltip(this)" onmouseleave="hideTooltip()"></img>`
+    randomdiv1.innerHTML = `<img src="./assets/${choice1}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building1" data-type="${choice1}" onmouseover="showRandomTooltip(this)" onclick="hideTooltip()" onmouseleave="hideTooltip()"></img>`
+    randomdiv2.innerHTML = `<img src="./assets/${choice2}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building2" data-type="${choice2}" onmouseover="showRandomTooltip(this)" onclick="hidemTooltip()" onmouseleave="hideTooltip()"></img>`
 }
 
 //return a array containing all buildings with their coordinates in a area specified by relativeCoords
@@ -169,6 +186,7 @@ function getSurrounding(x,y, relativeCoords){
 
 function calculateScore(x,y,type){
     var finalScore = 0
+    var finalCoins = 0
     const adjRelativeCoords = [[0,1],[0,-1],[1,0],[-1,0],[1,-1],[1,1],[-1,1],[-1,-1]] //relative coordinates of adjacent tiles
     //buildings that use adjacent scoring
     if (type in adjBuildingScores){
@@ -189,7 +207,7 @@ function calculateScore(x,y,type){
         if (type == "commercial"){
             for (i in surroundBuildings){
                 if (surroundBuildings[i] == "residential"){
-                   updateCoins(1)
+                   finalCoins = 1
                 }
             }
         }
@@ -200,7 +218,7 @@ function calculateScore(x,y,type){
         const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
         for (i in surroundBuildings){
             if (surroundBuildings[i] == "residential"){
-               updateCoins(1)
+               finalCoins = 1
             }
         }
     }else if (type == "road"){
@@ -214,7 +232,8 @@ function calculateScore(x,y,type){
             }
         }
     }
-    return finalScore
+    updateCoins(finalCoins)
+    return {score: finalScore, coins:finalCoins}
 }
 
 //check if place tile is connected to another building
@@ -250,7 +269,14 @@ function newTurn(){
     for (var y = 0; y < gridData.length; y++){
         for (var x = 0; x < gridData[0].length; x++){
             const type = gridData[y][x]
-            if (type) score += calculateScore(x,y,type)
+            if (type){
+                const scoreInfo = calculateScore(x,y,type)
+                score += scoreInfo.score
+                console.log(scoreInfo)
+                scoreData[y][x] = scoreInfo
+            }else{
+                scoreData[y][x] = 0
+            }
         }
     }
 
@@ -431,7 +457,8 @@ function createSaveObj(){
         turn: turns,
         coins: coins,
         score: score,
-        gridData: gridData
+        gridData: gridData,
+        scoreData: scoreData
     }
 }
 
