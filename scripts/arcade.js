@@ -7,6 +7,7 @@ const turnNumber = document.getElementById("turn")
 const saveGamePopup = document.getElementById("savegame-popup")
 const repeatFile = document.getElementById("repeat-file")
 const initialsPopup = document.getElementById("initials-popup")
+const tooltip = document.getElementById("tooltip")
 
 //to test, i set to 2
 var coins = 16
@@ -79,6 +80,33 @@ if (playSave != null){
 
 }
 
+const buildingDesc = {
+    residential: "Next to industry: 1point (max)\nNext to residential/commercial: 1 point\nNext to park: 2 points",
+    industry: "Per industry in city: 1 point\nNext to residential: 1 coin/turn",
+    commercial: "Next to commercial: 1 point\nNext to residential: 1 coin/turn",
+    park: "Next to park: 1 point",
+    road: "Per road in a row: 1 point",
+}
+
+function showTooltip(e){
+    //get the parent's id and use it to get the associated tooltip
+    const parentID = e.parentElement.id
+    const rect = e.getBoundingClientRect()
+
+    //display tooltip horizontally-centered, bottom of the building img
+    tooltip.style.left = `${rect.left}px`
+    tooltip.style.top = `${(rect.top + rect.height)*1.05}px`
+    tooltip.style.visibility = "visible"
+    console.log(e)
+    const type = e.dataset.type
+    const tooltipContent = `${type}\n${buildingDesc[type]}`
+    tooltip.innerHTML = tooltipContent.replaceAll("\n","<br>")
+}
+
+function hideTooltip(){
+    tooltip.style.visibility = "hidden"
+}
+
 function placeBuilding(type, x, y){
     const spot = document.getElementById(`${x},${y}`)
     //display image in spot
@@ -121,8 +149,8 @@ function generateRandomBuilding(){
     choice2 = typeList[choice2]
     const randomdiv1 = document.getElementById('randombuilding-1')
     const randomdiv2 = document.getElementById('randombuilding-2')
-    randomdiv1.innerHTML = `<img src="./assets/${choice1}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building1" data-type="${choice1}"></img>`
-    randomdiv2.innerHTML = `<img src="./assets/${choice2}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building2" data-type="${choice2}"></img>`
+    randomdiv1.innerHTML = `<img src="./assets/${choice1}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building1" data-type="${choice1}" onmouseover="showTooltip(this)" onmouseleave="hideTooltip()"></img>`
+    randomdiv2.innerHTML = `<img src="./assets/${choice2}.png" width="100%" draggable="true" ondragstart="drag(event)" id="building2" data-type="${choice2}" onmouseover="showTooltip(this)" onmouseleave="hideTooltip()"></img>`
 }
 
 //return a array containing all buildings with their coordinates in a area specified by relativeCoords
@@ -208,6 +236,7 @@ function allowDrop(ev) {
 //handle drag event
 function drag(ev) {
     action = "build"
+    hideTooltip()
     ev.dataTransfer.setData("building", ev.target.id);
 }
 
@@ -460,12 +489,12 @@ window.addEventListener("beforeunload", beforeUnloadHandler)
 
 
 function setGridHeight() {
+    //set the game grid height's to the bottom of the screen
+    //grid height = window height - y position of grid
     const gridY = grid.getBoundingClientRect().top
-    console.log()
-    console.log(`${window.innerHeight - gridY}px`)
     grid.style.height = `${(window.innerHeight*0.98 - gridY)}px`
 }
-setGridHeight()
-window.onresize = setGridHeight;
+setGridHeight() //set height on load
+window.onresize = setGridHeight; //set height everytime window is resized
 
 generateRandomBuilding()

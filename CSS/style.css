@@ -175,7 +175,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 1fr;
-    width: 130px;
+    width: 140px;
     border: 1px solid black;
     aspect-ratio: 2;
 }
@@ -348,4 +348,10 @@
 
 #initials-popup button:hover {
     background-color: #0056b3;
+}
+
+#tooltip{
+    background: white;
+    position: absolute;
+    font-size: 1.2rem;
 }
