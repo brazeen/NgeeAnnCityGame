@@ -126,7 +126,7 @@
     row-gap: 0;
     column-gap: 0;
     height: 25vw;
-    width: 80%;
+    width: 100%;
     border: 1px solid black;
     overflow: scroll;
     margin: auto;
