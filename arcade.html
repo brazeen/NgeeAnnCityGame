@@ -66,19 +66,20 @@
         <input type="text" id="sname" name="sname">
         </div>
         <button style="margin-top: 15vh;" onclick="saveGame()">Save</button>
+        <button id="cancelsaveBtn" onclick="document.getElementById('savegame-popup').style.display='none'">Cancel</button>
     </div>
 
     <div id = "repeat-file" class = "savegame-popup">
         <h3 style="margin-top: 5vh;" id = "repeat-title">Another save file with the name has been found. Do you want to override it?</h3>
         <div style="display: flex; margin-top: 20vh;">
-        <button style = "margin-right: 6vw;" onclick="saveGame(true)">Yes</button>
+        <button onclick="saveGame(true)">Yes</button>
         <button onclick="displaySaveGame('none')">No</button>
         </div>
     </div>
 
     <div id = "save-success" class = "savegame-popup">
         <h3 style="margin-top: 5vh;" id = "repeat-title">Game Saved successfully</h3>
-        <button style = "margin-right: 6vw;" onclick="executePostSave()">Ok</button>
+        <button onclick="executePostSave()">Ok</button>
     </div>
 
     <script src="./scripts/arcade.js"></script>
