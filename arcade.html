@@ -12,13 +12,13 @@
 </head>
 <body id="arcadeBody" style="overflow-y:hidden;">
     <div class = "top-stats">
-        <div style="margin-right: 5rem;">Turn <span id = "turn">1</span></div>
-        <div class = "img-txt">
+        <div style="margin-right: 5rem; display: flex;align-items: center; gap:1rem">Turn <span id = "turn">1</span></div>
+        <div class="img-txt">
             <img src="./assets/coin-icon.png">
             <div id = "coins">0</div>
         </div>
-        <div style="margin-left: 5rem;">Score: <span id = "score">0</span></div>
-        <div style="display: flex; margin-left: auto;">
+        <div style="margin-left: 5rem; display: flex;align-items: center; gap:1rem">Score: <span id = "score">0</span></div>
+        <div class="arcade-buttons">
             <button class="arcadeBtn" style="display: block;" onclick = "displaySaveGame()">Save Game</button>
             <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame('exit')">Exit To Main Menu</button>
         </div>
@@ -36,7 +36,7 @@
         </div>
         <div class="bulldozer-container">
             <h4 style="font-size: 1.4rem;">Drag the bulldozer over a building to demolish it.</h4>
-            <img id="bulldozer" src="./assets/dismantle.png" style="width: 70px;" draggable="true" ondragstart="destroyDrag(event)">
+            <img id="bulldozer" src="./assets/dismantle.png" style="width: 4.375rem;" draggable="true" ondragstart="destroyDrag(event)">
         </div>
     </div>
     

@@ -23,6 +23,12 @@
     html{
         font-size: 10px;
     }   
+    .action-containers{
+        flex-direction: column;
+    }
+    .buildings-container,.action-container,.bulldozer-container{
+        align-items: flex-start !important;
+    }
 
 }
 
@@ -31,6 +37,12 @@
         font-size: 8px;
     }   
 
+}
+
+@media (max-width: 330px){
+    .arcade-buttons{
+        margin-left: 0 !important;
+    }
 }
 
 /* Index */
@@ -100,7 +112,6 @@
     font-optical-sizing: auto;
     font-weight: 200;
     font-style: normal;
-    font-size: 30px;
 }
 
 .arcadeBtn {
@@ -206,6 +217,11 @@
 .img-txt img {
     height: 2rem;
     margin-right: 1rem;
+}
+
+.arcade-buttons{
+    display: flex; 
+    margin-left: auto;
 }
 
 #gameover-popup {
