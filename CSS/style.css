@@ -45,6 +45,14 @@
     }
 }
 
+#indexTitle {
+    margin: 1rem !important;
+}
+
+#indexSubtitle {
+    margin: 1rem !important;
+}
+
 /* Index */
 #indexDiv {
     display: flex;
@@ -58,7 +66,7 @@
     padding-top: 40px;
     background: url(../assets/cityscape.jpg);
     background-size: cover;
-    font-family: "Oswald", sans-serif;
+    font-family: "Poppins", sans-serif;
     font-optical-sizing: auto;
     font-weight: 200;
     font-style: normal;
@@ -107,30 +115,30 @@
 
 /* Arcade */
 #arcadeBody {
-    background: rgb(216, 146, 15);
-    font-family: "Oswald", sans-serif;
+    background: #93C469;
+    font-family: "Poppins", sans-serif;
     font-optical-sizing: auto;
     font-weight: 200;
     font-style: normal;
 }
 
 .arcadeBtn {
-    border-radius: 8px;
-    padding: 10px;
     margin: 4px 2px;
     font-size: 0.9rem;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     border: none;
     background-color: whitesmoke;
     transition: ease-in-out 0.3s;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .arcadeBtn:hover {
     cursor: pointer;
-    border-radius: 8px;
-    padding: 10px;
+    border-radius: 20px;
+    padding: 15px;
     margin: 4px 2px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-color: rgb(241, 193, 18);
     background-color: rgb(241, 193, 18);
 }
@@ -166,6 +174,27 @@
     text-align: center;
 }
 
+.turn {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.coins {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.score {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 #game-grid {
     display: grid; 
     grid-template-columns: repeat(20, 4.375rem); 
@@ -174,14 +203,24 @@
     column-gap: 0;
     height: 100%;
     width: min(100%,calc((4.375rem * 20) + 18px)); /*if the grid can shrink to fit its contents, shrink*/
-    border: 1px solid black;
+    border: 1px solid #29804c;
     overflow: scroll;
     margin: auto;
     margin-top: 1vw !important;
 }
 
+
+
+
+
+
+.grid-spot:hover {
+    background-color: aliceblue;
+    transition: ease-in-out, 0.3s;
+}
+
 .grid-spot {
-    border: 1px solid black;
+    border: 1px solid #29804c;
 }
 
 .grid-spot:hover {
@@ -377,14 +416,19 @@
     background: white;
     position: absolute;
     font-size: 1.2rem;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .legend {
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
+    border-radius: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 20px;
     width: fit-content;
     margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   .legend h2 {
@@ -404,6 +448,7 @@
     margin: 5px;
     text-align: center;
     width: calc(20% - 10px);
+    padding: 10px;
   }
   
   .legend-items img {
@@ -430,3 +475,8 @@
       width: calc(50% - 10px);
     }
   }
+
+
+#game-grid img {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
