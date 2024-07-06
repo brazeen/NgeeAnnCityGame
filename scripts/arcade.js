@@ -214,7 +214,7 @@ function calculateScore(x,y,type){
         if (type == "commercial"){
             for (i in surroundBuildings){
                 if (surroundBuildings[i] == "residential"){
-                   finalCoins = 1
+                   finalCoins += 1
                 }
             }
         }
@@ -409,11 +409,19 @@ function checkIfGameOver() {
 
 var saveType = "normal"
 
+function cancelSave(){
+    //hide the popup and execute post save action (leave sit, exit to main menu)
+    saveGamePopup.style.display='none'
+    lastSave = createSaveObj() //trick alreadySaved() function to return true
+    executePostSave()
+}
+
 function executePostSave(){
+    //hide all popups and execute the user's action after saving
     repeatFile.style.display = "none"
     document.getElementById('save-success').style.display = 'none'
     console.log(saveType)
-    if(saveType == "exit"){
+    if(saveType == "exit"){ //exit to main menu
         window.location='./index.html'
     }
 }
