@@ -98,12 +98,34 @@ function showPlacedTooltip(e){
     const {score, coins} = scoreData[yPos][xPos]
     //display tooltip horizontally-centered, bottom of the building img
     const rect = e.getBoundingClientRect()
-    tooltip.style.left = `${rect.left}px`
-    tooltip.style.top = `${(rect.top + rect.height)*1.01}px`
+    const startY = (rect.top + rect.height)*1.01 //Y position to plasce the tooltip
+    const startX = rect.left-(tooltip.offsetWidth-e.offsetWidth)/2 //center it horizontally based on the element
+
     tooltip.style.visibility = "visible"
     const type = parentEle.classList[1] //get type from parent element
     const tooltipContent = `${type}\nScore Value: ${score}\nCoins per turn:${coins}`
     tooltip.innerHTML = tooltipContent.replaceAll("\n","<br>")
+
+    //check if tooltip is so low that it goes below the screen
+    if ((startY + tooltip.offsetHeight) > window.innerHeight){
+        //display tooltip above instead
+        tooltip.style.top = `${(rect.top - tooltip.offsetHeight)*0.99}px`
+    }
+    else{
+        //display tooltip below
+        tooltip.style.top = `${(startY)*1.01}px`
+    }
+
+    //check if tooltip is too far to the right/left and gets cut off
+    if (startX < 0){
+        //too far to the right
+        tooltip.style.left = `${rect.left}px`
+    }else if (startX+tooltip.offsetWidth > window.innerWidth){
+        tooltip.style.left = `${rect.left - e.offsetWidth}px`
+    }else {
+        tooltip.style.left = `${startX}px` //center it horizontally based on the element
+    }
+
 }
 
 //show tooltips for random buildings
@@ -111,13 +133,12 @@ function showRandomTooltip(e){
     const rect = e.getBoundingClientRect()
 
     //display tooltip horizontally-centered, bottom of the building img
-    tooltip.style.left = `${rect.left}px`
     tooltip.style.top = `${(rect.top + rect.height)*1.05}px`
     tooltip.style.visibility = "visible"
-    console.log(e)
     const type = e.dataset.type
     const tooltipContent = `${type}\n${buildingDesc[type]}`
     tooltip.innerHTML = tooltipContent.replaceAll("\n","<br>")
+    tooltip.style.left = `${rect.left-(tooltip.offsetWidth-e.offsetWidth)/2}px` //center
 }
 
 function hideTooltip(){
@@ -274,7 +295,6 @@ function newTurn(){
             if (type){
                 const scoreInfo = calculateScore(x,y,type)
                 score += scoreInfo.score
-                console.log(scoreInfo)
                 scoreData[y][x] = scoreInfo
             }else{
                 scoreData[y][x] = 0
