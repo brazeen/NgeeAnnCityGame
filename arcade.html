@@ -11,6 +11,21 @@
     <title>Arcade Mode | Ngee Ann City</title>
 </head>
 <body id="arcadeBody" style="overflow-y:hidden;">
+    <div id = "tutorial">
+        <div style="width: 45%; height: fit-content; background-color: #70B337; position: relative;">
+            <div style="display: flex;" class="title">
+                <div id = "close">X</div>
+                <div id = "title" style="margin-left: 3%; padding-top: 2%; padding-bottom: 2%;">Tutorial: Welcome!</div>
+                <div style="margin-left: auto; padding-top: 2%; padding-bottom: 2%; margin-right: 2%;" id = "page-no">1/20</div>
+            </div>
+            <img src="./assets/tutorial/arcade/1.png">
+            <div style="display: flex; width: 100%;">
+                <div class = "nav"><</div>
+                <div class = "description">Welcome to Arcade Mode! In this game, you build a city to score as many points as possible</div>
+                <div class = "nav" style="margin-left: auto;">></div>
+            </div>
+        </div>
+    </div>
     <div class = "top-stats">
         <div class="turn" style="margin-right: 5rem; display: flex;align-items: center; gap:1rem">Turn <span id = "turn">1</span></div>
         <div class="coins img-txt">
@@ -110,6 +125,7 @@
     </div>
 
     <script src="./scripts/arcade.js"></script>
+    <script src="./scripts/tutorial.js"></script>
     <script>
         window.onload = function() {
             document.body.onselectstart = function() {
