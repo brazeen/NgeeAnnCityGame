@@ -506,20 +506,22 @@
     font-weight: 500;
     text-align: center;
     padding: 2%;
+    height: calc(1.2rem * 3);
 }
 
 #tutorial .nav{
     font-size: 2rem;
     background-color: #4B851A;
-    width: 15%;
+    width: 12%;
     display: flex;
     justify-content: center; 
     align-items: center; 
     cursor: pointer;
+    flex-shrink: 0;
 }
 
 #tutorial img{
-    width: 100%;
+    max-width: 100%;
     object-fit: contain;
 }
 
