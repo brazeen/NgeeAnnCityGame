@@ -79,6 +79,7 @@ function renderGrid(){
     let fragment = document.createDocumentFragment();
     for (let y = 0; y < gridData.length; y++){
         for (let x = 0; x < gridData[0].length; x++){
+            //create tile element
             let e = document.createElement("div")
             e.className = "grid-spot"
             e.id = `${x},${y}`
@@ -87,6 +88,23 @@ function renderGrid(){
             e.addEventListener("dragenter", spotDragEnter)
             e.addEventListener("dragleave", spotDragLeave)
             fragment.appendChild(e)
+
+            //render buildings
+            //spot.innerHTML = `<img src="./assets/${type}.png" width="100%" draggable = "false" onmouseover="showPlacedTooltip(this)" onmouseleave="hideTooltip()"></img>`
+            console.log()
+            if (gridData[y][x].type){
+                let imge = document.createElement("img")
+                imge.src = `./assets/${gridData[y][x].type}.png`
+                imge.style.width = "100%"
+                imge.setAttribute("draggable", false)
+                //imge.setAttribute("onmouseover", showPlacedTooltip(this))
+                imge.addEventListener("mouseover", function(evt) {
+                    showPlacedTooltip(this)
+                })
+                imge.addEventListener("mouseleave", (evt) => hideTooltip())
+                //add it to the tile
+                e.appendChild(imge)
+            }
             /*
             grid.innerHTML += `
                 <div class = "grid-spot" id = "${x},${y}" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="spotDragEnter(event)" ondragleave="spotDragLeave(event)"></div>
@@ -178,7 +196,7 @@ function placeBuilding(type, x, y){
 
 function destroyBuilding(x,y){
     const spot = document.getElementById(`${x},${y}`)
-    const type = gridData[y][x]
+    const type = gridData[y][x].type
     //remove image in spot
     spot.innerHTML = ``
     //add class
