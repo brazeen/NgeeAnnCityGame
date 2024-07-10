@@ -76,6 +76,10 @@ function renderGrid(){
     grid.style.gridTemplateRows = `repeat(${gridSize[1]},4.375rem)`
     //also update the width of the whole grid
     grid.style.width = `min(100%,calc((4.375rem * ${gridSize[0]}) + 18px))`
+
+    //implement the fastest way to add elements to DOM
+    //this is done by creating elements, appending them to a document fragment and adding the document fragment to the grid at the end
+    //https://howchoo.com/javascript/learn-the-slow-and-fast-way-to-append-elements-to-the-dom/
     let fragment = document.createDocumentFragment();
     for (let y = 0; y < gridData.length; y++){
         for (let x = 0; x < gridData[0].length; x++){
@@ -91,13 +95,12 @@ function renderGrid(){
 
             //render buildings
             //spot.innerHTML = `<img src="./assets/${type}.png" width="100%" draggable = "false" onmouseover="showPlacedTooltip(this)" onmouseleave="hideTooltip()"></img>`
-            console.log()
             if (gridData[y][x].type){
                 let imge = document.createElement("img")
                 imge.src = `./assets/${gridData[y][x].type}.png`
                 imge.style.width = "100%"
                 imge.setAttribute("draggable", false)
-                //imge.setAttribute("onmouseover", showPlacedTooltip(this))
+                //use a regular function, arrow functions dont allow for 'this' keyword
                 imge.addEventListener("mouseover", function(evt) {
                     showPlacedTooltip(this)
                 })
@@ -105,12 +108,6 @@ function renderGrid(){
                 //add it to the tile
                 e.appendChild(imge)
             }
-            /*
-            grid.innerHTML += `
-                <div class = "grid-spot" id = "${x},${y}" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="spotDragEnter(event)" ondragleave="spotDragLeave(event)"></div>
-                `
-            */
-            //if (gridData[y][x].type) placeBuilding(gridData[y][x].type,x,y)
         }
     }
     grid.appendChild(fragment)
