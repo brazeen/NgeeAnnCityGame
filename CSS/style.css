@@ -195,10 +195,10 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+
+
 #game-grid {
     display: grid; 
-    grid-template-columns: repeat(20, 4.375rem); 
-    grid-template-rows: repeat(20, 4.375rem); 
     row-gap: 0;
     column-gap: 0;
     height: 100%;
@@ -207,6 +207,12 @@
     overflow: scroll;
     margin: auto;
     margin-top: 1vw !important;
+}
+
+.arcade-grid{
+    /*preset columns and rows*/
+    grid-template-columns: repeat(20, 4.375rem); 
+    grid-template-rows: repeat(20, 4.375rem); 
 }
 
 

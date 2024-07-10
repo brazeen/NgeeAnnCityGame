@@ -11,7 +11,7 @@
     <title>Arcade Mode | Ngee Ann City</title>
 </head>
 <body id="arcadeBody" style="overflow-y:hidden;">
-    <div id = "tutorial">
+    <div id = "tutorial" style="display: none;">
         <div style="width: 45%; height: fit-content; background-color: #70B337;">
             <div style="display: flex;" class="title">
                 <div id = "close" onclick = "tutorialClose()">X</div>
@@ -85,7 +85,7 @@
     </div>
     
     <div class = "game-grid-container">
-        <div id = "game-grid" class = "arcade-grid">
+        <div id = "game-grid">
         </div>
     </div>
 
@@ -126,8 +126,7 @@
         <button onclick="executePostSave()">Ok</button>
     </div>
 
-    <script src="./scripts/arcade.js"></script>
-    <script src="./scripts/tutorial.js"></script>
+    <script src="./scripts/freeplay.js"></script>
     <script>
         window.onload = function() {
             document.body.onselectstart = function() {
