@@ -42,16 +42,12 @@ const adjBuildingScores = { //only store scoring data for buildings that have sc
 //generate the spots with coordinates as their id
 //also initialise the 2d arrays
 var gridData = [] //store the buildings on the grid
-var scoreData = [] //store the score of the buildings on the grid
 for (var y = 0; y < gridSize[0]; y++){
     var gridRow = []
-    var scoreRow = []
     for (var x = 0; x < gridSize[1]; x++){
-        gridRow.push("")
-        scoreRow.push(0)
+        gridRow.push({})
     }
     gridData.push(gridRow)
-    scoreData.push(scoreRow)
 }
 
 var lastSave = createSaveObj() //store previous save data
@@ -65,7 +61,6 @@ if (playSave != null){
     turns = save.turn
     score = save.score
     gridData = save.gridData
-    scoreData = save.scoreData
     //update html elements
     coinLabel.innerText = coins
     scoreLabel.innerText = score
@@ -86,7 +81,7 @@ function renderGrid(){
             grid.innerHTML += `
                 <div class = "grid-spot" id = "${x},${y}" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="spotDragEnter(event)" ondragleave="spotDragLeave(event)"></div>
                 `
-            if (gridData[y][x]) placeBuilding(gridData[y][x],x,y)
+            if (gridData[y][x].type) placeBuilding(gridData[y][x].type,x,y)
         }
     }
 }
@@ -107,14 +102,13 @@ function showPlacedTooltip(e){
     //get the parent's element to get the x and y value
     const parentEle = e.parentElement
     const [xPos,yPos] = parentEle.id.split(",")
-    const {score, coins} = scoreData[yPos][xPos]
+    const {type,score, coins} = gridData[yPos][xPos]
     //display tooltip horizontally-centered, bottom of the building img
     const rect = e.getBoundingClientRect()
     const startY = (rect.top + rect.height)*1.01 //Y position to plasce the tooltip
     const startX = rect.left-(tooltip.offsetWidth-e.offsetWidth)/2 //center it horizontally based on the element
 
     tooltip.style.visibility = "visible"
-    const type = parentEle.classList[1] //get type from parent element
     const tooltipContent = `${type}\nScore Value: ${score}\nCoins per turn:${coins}`
     tooltip.innerHTML = tooltipContent.replaceAll("\n","<br>")
 
@@ -166,7 +160,7 @@ function placeBuilding(type, x, y){
     //reset background color
     spot.style.backgroundColor = ""
     //update grid data
-    gridData[y][x] = type
+    gridData[y][x].type = type
     buildingCount += 1
 }
 
@@ -180,7 +174,7 @@ function destroyBuilding(x,y){
     //reset background color
     spot.style.backgroundColor = ""
     //update grid data
-    gridData[y][x] = ""
+    gridData[y][x] = {}
     updateCoins(-1)
     buildingCount -= 1
 }
@@ -212,7 +206,7 @@ function getSurrounding(x,y, relativeCoords){
         const tileX = relativeCoords[i][1] + x
         //check for out-of-bounds search
         if (tileY < 0 || tileX < 0 || tileY == gridSize[0] || tileX == gridSize[1]) continue
-        if (gridData[tileY][tileX]) out.push(gridData[tileY][tileX])
+        if (gridData[tileY][tileX].type) out.push(gridData[tileY][tileX].type)
     }
     return out
 }
@@ -293,13 +287,12 @@ function newTurn(){
     score = 0
     for (var y = 0; y < gridData.length; y++){
         for (var x = 0; x < gridData[0].length; x++){
-            const type = gridData[y][x]
+            const spotData = gridData[y][x]
+            const type = spotData.type
             if (type){
                 const scoreInfo = calculateScore(x,y,type)
                 score += scoreInfo.score
-                scoreData[y][x] = scoreInfo
-            }else{
-                scoreData[y][x] = 0
+                gridData[y][x] = Object.assign(spotData,scoreInfo)
             }
         }
     }
@@ -327,11 +320,13 @@ function drop(ev) {
             gridSize = gridSize.map(x => x+10)
             //also update gridData by adding blank spots
             //right and left
-            for (let i = 0; i < gridData.length; i++) { 
+
+            const length = gridData.length
+            for (let i = 0; i < length; i++) { 
                 //for each row, add 5 empty elements at the front and back
                 for(let j = 0; j < 5; j++){
-                    gridData[i].push("");
-                    gridData[i].unshift("");
+                    gridData[i].push({});
+                    gridData[i].unshift({});
                 }
             }
 
@@ -341,20 +336,23 @@ function drop(ev) {
             //create the row to add
             const rowToAdd = []
             for (let i = 0; i < rowLength; i++){
-                rowToAdd.push("")
+                rowToAdd.push({})
             }
-            console.log(rowToAdd)
             //finally, add the rows to gridData
             for (let i = 0; i < 5; i++) { 
                 gridData.push(rowToAdd);
                 gridData.unshift(rowToAdd);
             }
+            //remove references
+            gridData = JSON.parse(JSON.stringify(gridData));
 
+            console.time('renderGrid')
             renderGrid()
+            console.timeEnd('renderGrid')
         }
         //update coin
         updateCoins(-1)
-        newTurn()
+        //newTurn()
     }else{
         const targetId = ev.target.parentElement.id
         const [x, y] = targetId.split(',').map(Number);
@@ -518,7 +516,6 @@ function createSaveObj(){
         coins: coins,
         score: score,
         gridData: gridData,
-        scoreData: scoreData
     }
 }
 
