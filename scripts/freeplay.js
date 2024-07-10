@@ -76,14 +76,26 @@ function renderGrid(){
     grid.style.gridTemplateRows = `repeat(${gridSize[1]},4.375rem)`
     //also update the width of the whole grid
     grid.style.width = `min(100%,calc((4.375rem * ${gridSize[0]}) + 18px))`
-    for (var y = 0; y < gridData.length; y++){
-        for (var x = 0; x < gridData[0].length; x++){
+    let fragment = document.createDocumentFragment();
+    for (let y = 0; y < gridData.length; y++){
+        for (let x = 0; x < gridData[0].length; x++){
+            let e = document.createElement("div")
+            e.className = "grid-spot"
+            e.id = `${x},${y}`
+            e.addEventListener("drop",drop)
+            e.addEventListener("dragover",allowDrop)
+            e.addEventListener("dragenter", spotDragEnter)
+            e.addEventListener("dragleave", spotDragLeave)
+            fragment.appendChild(e)
+            /*
             grid.innerHTML += `
                 <div class = "grid-spot" id = "${x},${y}" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="spotDragEnter(event)" ondragleave="spotDragLeave(event)"></div>
                 `
-            if (gridData[y][x].type) placeBuilding(gridData[y][x].type,x,y)
+            */
+            //if (gridData[y][x].type) placeBuilding(gridData[y][x].type,x,y)
         }
     }
+    grid.appendChild(fragment)
 }
 
 renderGrid()
