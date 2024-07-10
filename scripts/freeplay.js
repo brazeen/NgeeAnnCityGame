@@ -16,7 +16,7 @@ var score = 0
 var isGameOver = false
 var action = ""
 updateCoins()
-const gridSize = [5,5]
+var gridSize = [5,5]
 var buildingCount = 0 //track number buildings so we know when all tiles are filled
 const buildings = {
     "residential": [1,1],
@@ -47,9 +47,6 @@ for (var y = 0; y < gridSize[0]; y++){
     var gridRow = []
     var scoreRow = []
     for (var x = 0; x < gridSize[1]; x++){
-        grid.innerHTML += `
-        <div class = "grid-spot" id = "${x},${y}" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="spotDragEnter(event)" ondragleave="spotDragLeave(event)"></div>
-        `
         gridRow.push("")
         scoreRow.push(0)
     }
@@ -73,23 +70,28 @@ if (playSave != null){
     coinLabel.innerText = coins
     scoreLabel.innerText = score
     turnNumber.innerText = turns
-    for (var y = 0; y < gridData.length; y++){
-        for (var x = 0; x < gridData[0].length; x++){
-            if (gridData[y][x]) placeBuilding(gridData[y][x],x,y)
-        }
-    }
 
 }
 
-function updateGridSize(){
+//delete the contents of the grid and rebuild it
+function renderGrid(){
+    grid.innerHTML = ""
     //set the grid's size
     grid.style.gridTemplateColumns = `repeat(${gridSize[0]},4.375rem)`
     grid.style.gridTemplateRows = `repeat(${gridSize[1]},4.375rem)`
     //also update the width of the whole grid
     grid.style.width = `min(100%,calc((4.375rem * ${gridSize[0]}) + 18px))`
+    for (var y = 0; y < gridData.length; y++){
+        for (var x = 0; x < gridData[0].length; x++){
+            grid.innerHTML += `
+                <div class = "grid-spot" id = "${x},${y}" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="spotDragEnter(event)" ondragleave="spotDragLeave(event)"></div>
+                `
+            if (gridData[y][x]) placeBuilding(gridData[y][x],x,y)
+        }
+    }
 }
 
-updateGridSize()
+renderGrid()
 
 const buildingDesc = {
     residential: "Next to industry: 1point (max)\nNext to residential/commercial: 1 point\nNext to park: 2 points",
@@ -320,6 +322,36 @@ function drop(ev) {
         const img = document.getElementById(data);
         const type = img.getAttribute("data-type");
         placeBuilding(type, x, y);
+        //check if built on border and expand
+        if (x === 0 || x === gridSize[0]-1 || y === 0 || y === gridSize[1]-1){
+            gridSize = gridSize.map(x => x+10)
+            //also update gridData by adding blank spots
+            //right and left
+            for (let i = 0; i < gridData.length; i++) { 
+                //for each row, add 5 empty elements at the front and back
+                for(let j = 0; j < 5; j++){
+                    gridData[i].push("");
+                    gridData[i].unshift("");
+                }
+            }
+
+            //top and bottom
+            //get length of a row
+            const rowLength = gridSize[0]
+            //create the row to add
+            const rowToAdd = []
+            for (let i = 0; i < rowLength; i++){
+                rowToAdd.push("")
+            }
+            console.log(rowToAdd)
+            //finally, add the rows to gridData
+            for (let i = 0; i < 5; i++) { 
+                gridData.push(rowToAdd);
+                gridData.unshift(rowToAdd);
+            }
+
+            renderGrid()
+        }
         //update coin
         updateCoins(-1)
         newTurn()
