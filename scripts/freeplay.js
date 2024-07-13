@@ -39,6 +39,15 @@ const adjBuildingScores = { //only store scoring data for buildings that have sc
     ]
 }
 
+//data for coin generation
+const coinGenerationData = {
+    residential: 1,
+    industry: 2,
+    commercial: 3,
+    park: 0,
+    road: 0
+}
+
 //generate the spots with coordinates as their id
 //also initialise the 2d arrays
 var gridData = [] //store the buildings on the grid
@@ -163,7 +172,8 @@ function showPlacedTooltip(e){
     const startX = rect.left-(tooltip.offsetWidth-e.offsetWidth)/2 //center it horizontally based on the element
 
     tooltip.style.visibility = "visible"
-    const tooltipContent = `${type}\nScore Value: ${score}\nCoins per turn:${coins}`
+    //capitalise first letter of type
+    const tooltipContent = `${type.charAt(0).toUpperCase()}${type.slice(1)}\nScore Value: ${score}\nCoins per turn: ${coins}`
     tooltip.innerHTML = tooltipContent.replaceAll("\n","<br>")
 
     //check if tooltip is so low that it goes below the screen
@@ -293,15 +303,6 @@ function calculateScore(x,y,type){
             if (exitLoop) break
         }
 
-        //gernerate coin for commercial
-        if (type == "commercial"){
-            for (i in surroundBuildings){
-                if (surroundBuildings[i] == "residential"){
-                   finalCoins += 1
-                }
-            }
-        }
-
     }else if (type == "industry"){
         finalScore = 1
         //generate coins
@@ -318,7 +319,7 @@ function calculateScore(x,y,type){
         
     }
     updateCoins(finalCoins)
-    return {score: finalScore, coins:finalCoins}
+    return {score: finalScore}
 }
 
 //allow dropping on grid spots
@@ -349,7 +350,8 @@ function newTurn(){
             if (type){
                 const scoreInfo = calculateScore(x,y,type)
                 score += scoreInfo.score
-                spotData = Object.assign(spotData,scoreInfo)
+                console.log(coinGenerationData[type])
+                spotData = Object.assign(spotData,scoreInfo, {coins: coinGenerationData[type]})
             }
         }
     }
