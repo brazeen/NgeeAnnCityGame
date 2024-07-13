@@ -11,81 +11,56 @@
     <title>Arcade Mode | Ngee Ann City</title>
 </head>
 <body id="arcadeBody" style="overflow-y:hidden;">
-    <div id = "tutorial">
+    <div id="tutorial">
         <div style="width: 45%; height: fit-content; background-color: #70B337;">
             <div style="display: flex;" class="title">
-                <div id = "close" onclick = "tutorialClose()">X</div>
-                <div style="margin-left: 3%; padding-top: 2%; padding-bottom: 2%;">Tutorial: <span id = "title">Welcome!</span></div>
-                <div style="margin-left: auto; padding-top: 2%; padding-bottom: 2%; margin-right: 2%;"><span id = "page-no">1</span>/<span id = "page-max">20</span></div>
+                <div id="close" onclick="tutorialClose()">X</div>
+                <div style="margin-left: 3%; padding-top: 2%; padding-bottom: 2%;">Tutorial: <span id="title">Welcome!</span></div>
+                <div style="margin-left: auto; padding-top: 2%; padding-bottom: 2%; margin-right: 2%;"><span id="page-no">1</span>/<span id="page-max">20</span></div>
             </div>
-            <div style="display: flex; align-items: center; justify-content: center; height: 20rem;" id = "img-container">
+            <div style="display: flex; align-items: center; justify-content: center; height: 20rem;" id="img-container">
                 <img src="./assets/tutorial/arcade/1.png">
             </div>
             <div style="display: flex; width: 100%;">
-                <div class = "nav" onclick="tutorialBack()"><</div>
-                <div class = "description">Welcome to Arcade Mode! In this game, you build a city to score as many points as possible</div>
-                <div class = "nav" style="margin-left: auto;" onclick="tutorialNext()">></div>
+                <div class="nav" onclick="tutorialBack()"><</div>
+                <div class="description">Welcome to Arcade Mode! In this game, you build a city to score as many points as possible</div>
+                <div class="nav" style="margin-left: auto;" onclick="tutorialNext()">></div>
             </div>
         </div>
     </div>
-    <div class = "top-stats">
-        <div class="turn" style="margin-right: 5rem; display: flex;align-items: center; gap:1rem">Turn <span id = "turn">1</span></div>
-        <div class="coins img-txt">
-            <img src="./assets/coin-icon.png">
-            <div id = "coins">0</div>
-        </div>
-        <div class="score" style="margin-left: 5rem; display: flex;align-items: center; gap:1rem">Score: <span id = "score">0</span></div>
-        <div class="arcade-buttons">
-            <button class="arcadeBtn" style="display: block;" onclick = "displaySaveGame()">Save Game</button>
-            <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame('exit')">Exit To Main Menu</button>
+    <div class="header">
+        <div class="top-stats">
+            <div class="turn" style="margin-right: 5rem; display: flex; align-items: center; gap: 1rem;">Turn <span id="turn">1</span></div>
+            <div class="coins img-txt">
+                <img src="./assets/coin-icon.png">
+                <div id="coins">0</div>
+            </div>
+            <div class="score" style="margin-left: 5rem; display: flex; align-items: center; gap: 1rem;">Score: <span id="score">0</span></div>
+            <div class="arcade-buttons">
+                <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame()">Save Game</button>
+                <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame('exit')">Exit To Main Menu</button>
+            </div>
         </div>
     </div>
-
-    <div class="legend">
-        <h2>Legend</h2>
-        <ul class="legend-items">
-          <li>
-            <img src="assets/residential.png" alt="Residential Building">
-            <span>Residential</span>
-          </li>
-          <li>
-            <img src="assets/commercial.png" alt="Commercial Building">
-            <span>Commercial</span>
-          </li>
-          <li>
-            <img src="assets/industry.png" alt="Industrial Building">
-            <span>Industry</span>
-          </li>
-          <li>
-            <img src="assets/park.png" alt="Park">
-            <span>Park</span>
-          </li>
-          <li>
-            <img src="assets/road.png" alt="Road">
-            <span>Road</span>
-          </li>
-        </ul>
-      </div>
-      
     <div id="tooltip"></div>
-    <div class="action-containers">
-        <div class="buildings-container">
-            <h4 style="font-size: 1.4rem;">Drag a building to the grid to build.</h4>
-            <div id="randombuilding-grid">
-                <div>
-                <div id="randombuilding-1" class="randombuilding"></div>
+    <div class="main-container">
+        <div class="game-container">
+            <div id="game-grid" class="arcade-grid"></div>
+        </div>
+        <div class="sidebar">
+            <div class="action-containers">
+                <div class="buildings-container">
+                    <h4 style="font-size: 1.4rem;">Drag a building to the grid to build.</h4>
+                    <div id="randombuilding-grid">
+                        <div id="randombuilding-1" class="randombuilding"></div>
+                        <div id="randombuilding-2" class="randombuilding"></div>
+                    </div>
                 </div>
-                <div id="randombuilding-2" class="randombuilding"></div>
+                <div class="bulldozer-container">
+                    <h4 style="font-size: 1.4rem;">Drag the bulldozer over a building to demolish it.</h4>
+                    <img id="bulldozer" src="./assets/dismantle.png" style="width: 4.375rem;" draggable="true" ondragstart="destroyDrag(event)">
+                </div>
             </div>
-        </div>
-        <div class="bulldozer-container">
-            <h4 style="font-size: 1.4rem;">Drag the bulldozer over a building to demolish it.</h4>
-            <img id="bulldozer" src="./assets/dismantle.png" style="width: 4.375rem;" draggable="true" ondragstart="destroyDrag(event)">
-        </div>
-    </div>
-    
-    <div class = "game-grid-container">
-        <div id = "game-grid" class = "arcade-grid">
         </div>
     </div>
 
@@ -103,26 +78,26 @@
         </form>
     </div>
 
-    <div id = "savegame-popup" class = "savegame-popup">
-        <h3 id = "save-game">Save Arcade Game</h3>
+    <div id="savegame-popup" class="savegame-popup">
+        <h3 id="save-game">Save Arcade Game</h3>
         <div>
-        <label for="fname">Save file name:</label>
-        <input type="text" id="sname" name="sname">
+            <label for="fname">Save file name:</label>
+            <input type="text" id="sname" name="sname">
         </div>
         <button style="margin-top: 15vh;" onclick="saveGame()">Save</button>
         <button id="cancelsaveBtn" onclick="cancelSave()">Cancel</button>
     </div>
 
-    <div id = "repeat-file" class = "savegame-popup">
-        <h3 style="margin-top: 5vh;" id = "repeat-title">Another save file with the name has been found. Do you want to override it?</h3>
+    <div id="repeat-file" class="savegame-popup">
+        <h3 style="margin-top: 5vh;" id="repeat-title">Another save file with the name has been found. Do you want to override it?</h3>
         <div style="display: flex; margin-top: 20vh;">
-        <button onclick="saveGame(true)">Yes</button>
-        <button onclick="displaySaveGame('none')">No</button>
+            <button onclick="saveGame(true)">Yes</button>
+            <button onclick="displaySaveGame('none')">No</button>
         </div>
     </div>
 
-    <div id = "save-success" class = "savegame-popup">
-        <h3 style="margin-top: 5vh;" id = "repeat-title">Game Saved successfully</h3>
+    <div id="save-success" class="savegame-popup">
+        <h3 style="margin-top: 5vh;" id="repeat-title">Game Saved successfully</h3>
         <button onclick="executePostSave()">Ok</button>
     </div>
 

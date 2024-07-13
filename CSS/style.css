@@ -1,46 +1,41 @@
 @media (min-width: 1200px) {
-    html{
+    html {
         font-size: 16px;
-    }   
-
+    }
 }
 
 @media (max-width: 1200px) {
-    html{
+    html {
         font-size: 14px;
-    }   
-
+    }
 }
 
 @media (max-width: 900px) {
-    html{
+    html {
         font-size: 12px;
-    }   
-
+    }
 }
 
 @media (max-width: 700px) {
-    html{
+    html {
         font-size: 10px;
-    }   
-    .action-containers{
+    }
+    .action-containers {
         flex-direction: column;
     }
-    .buildings-container,.action-container,.bulldozer-container{
+    .buildings-container, .action-container, .bulldozer-container {
         align-items: flex-start !important;
     }
-
 }
 
 @media (max-width: 560px) {
-    html{
+    html {
         font-size: 8px;
-    }   
-
+    }
 }
 
-@media (max-width: 330px){
-    .arcade-buttons{
+@media (max-width: 330px) {
+    .arcade-buttons {
         margin-left: 0 !important;
     }
 }
@@ -73,7 +68,6 @@
     font-size: 30px;
     height: 100vh;
     overflow-y: hidden;
-
 }
 
 .indexBtn {
@@ -93,7 +87,7 @@
     margin: 4px 2px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     border-color: rgb(241, 193, 18);
-    background-color: gold
+    background-color: gold;
 }
 
 @media (max-width: 768px) {
@@ -115,11 +109,18 @@
 
 /* Arcade */
 #arcadeBody {
-    background: #93C469;
+    background: #3aa743;
     font-family: "Poppins", sans-serif;
     font-optical-sizing: auto;
     font-weight: 200;
     font-style: normal;
+}
+
+html, body {
+    overflow: hidden; /* Hides both horizontal and vertical scrollbars */
+    height: 100%; /* Ensures the body takes the full height */
+    margin: 0; /* Removes default margin */
+    padding: 0; /* Removes default padding */
 }
 
 .arcadeBtn {
@@ -145,7 +146,6 @@
 
 /* Parent container for bulldozer and buildings */
 .action-containers {
-    display: flex;
     justify-content: space-around;
     margin: 20px;
 }
@@ -195,8 +195,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-
 #game-grid {
     display: grid; 
     row-gap: 0;
@@ -207,18 +205,14 @@
     overflow: scroll;
     margin: auto;
     margin-top: 1vw !important;
+    background: #93C469;
 }
 
-.arcade-grid{
+.arcade-grid {
     /*preset columns and rows*/
     grid-template-columns: repeat(20, 4.375rem); 
     grid-template-rows: repeat(20, 4.375rem); 
 }
-
-
-
-
-
 
 .grid-spot:hover {
     background-color: aliceblue;
@@ -264,7 +258,7 @@
     margin-right: 1rem;
 }
 
-.arcade-buttons{
+.arcade-buttons {
     display: flex; 
     margin-left: auto;
 }
@@ -418,7 +412,7 @@
     background-color: #0056b3;
 }
 
-#tooltip{
+#tooltip {
     background: white;
     position: absolute;
     font-size: 1.2rem;
@@ -426,6 +420,7 @@
     padding: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     visibility: hidden;
+    z-index: 1100;
 }
 
 .legend {
@@ -436,59 +431,57 @@
     width: fit-content;
     margin: 0 auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .legend h2 {
+}
+
+.legend h2 {
     margin-bottom: 5px;
-  }
-  
-  .legend-items {
+}
+
+.legend-items {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-  }
-  
-  .legend-items li {
+}
+
+.legend-items li {
     margin: 5px;
     text-align: center;
     width: calc(20% - 10px);
     padding: 10px;
-  }
-  
-  .legend-items img {
+}
+
+.legend-items img {
     width: 40px;
     height: 40px;
     display: block;
     margin-bottom: 5px;
-  }
-  
-  .legend-items span {
+}
+
+.legend-items span {
     font-weight: bolder;
     font-size: 0.8em;
-  }
-  
-  
-  @media (max-width: 768px) {
-    .legend-items li {
-      width: calc(33% - 10px);
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .legend-items li {
-      width: calc(50% - 10px);
-    }
-  }
+}
 
+@media (max-width: 768px) {
+    .legend-items li {
+        width: calc(33% - 10px);
+    }
+}
+
+@media (max-width: 480px) {
+    .legend-items li {
+        width: calc(50% - 10px);
+    }
+}
 
 #game-grid img {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
-#tutorial{
+#tutorial {
     background-color: rgba(0,0,0,0.75);
     position: absolute;
     top: 0;
@@ -501,13 +494,13 @@
     padding-top: 8vw;
 }
 
-#tutorial .title{
+#tutorial .title {
     font-size: 1.4rem;
     font-weight: 600;
     display: flex;
 }
 
-#tutorial .description{
+#tutorial .description {
     font-size: 1.2rem;
     font-weight: 500;
     text-align: center;
@@ -515,7 +508,7 @@
     height: calc(1.2rem * 3);
 }
 
-#tutorial .nav{
+#tutorial .nav {
     font-size: 2rem;
     background-color: #4B851A;
     width: 12%;
@@ -526,13 +519,13 @@
     flex-shrink: 0;
 }
 
-#tutorial img{
+#tutorial img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
 }
 
-#tutorial #close{
+#tutorial #close {
     width: calc(4% + 1.4rem);
     background-color: #E83030;
     cursor: pointer;
@@ -540,4 +533,61 @@
     align-items: center;
     justify-content: center;
     font-weight: 700;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.game-container {
+    flex: 1;
+    overflow: hidden; /* Hides both horizontal and vertical scrollbars */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+@media (min-width: 900px) {
+    .main-container {
+        flex-direction: row;
+    }
+    .sidebar {
+        width: 20%;
+    }
+    .game-container {
+        width: 80%;
+    }
+}
+
+@media (max-width: 900px) {
+    .sidebar {
+        order: 1;
+        width: 100%;
+    }
+    .game-container {
+        order: 0;
+        width: 100%;
+    }
 }
