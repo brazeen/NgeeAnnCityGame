@@ -65,7 +65,32 @@ if (playSave != null){
     coinLabel.innerText = coins
     scoreLabel.innerText = score
     turnNumber.innerText = turns
+}
 
+//return the offset to convert coords to regular array indexing
+//return an array [xOffset, yOffset]
+
+function getGridOffset(){
+    return gridSize.map(x => parseInt((x-1)/2))
+}
+//return an array for the top left and bottom right coordinates
+//[x1,y1,x2,y2]
+function getGridBounding(){
+    //bottom right coordinates
+    const [x2,y2] = getGridOffset()
+    //upper left coordinates
+    const x1 = x2*-1
+    const y1 = y2*-1
+    return [x1,y1,x2,y2]
+}
+//return the obj of the building at the grid spot
+//we need this because of negative coords
+//accept negative coord system
+function getGrid(x,y){
+    const xInt = parseInt(x)
+    const yInt = parseInt(y)
+    const [xOffset, yOffset] = getGridOffset()
+    return gridData[yInt+yOffset][xInt+xOffset]
 }
 
 //delete the contents of the grid and rebuild it
@@ -77,12 +102,14 @@ function renderGrid(){
     //also update the width of the whole grid
     grid.style.width = `min(100%,calc((4.375rem * ${gridSize[0]}) + 18px))`
 
+    //get bounding ccoordinates
+    const [xStart, yStart, xEnd, yEnd] = getGridBounding()
     //implement the fastest way to add elements to DOM
     //this is done by creating elements, appending them to a document fragment and adding the document fragment to the grid at the end
     //https://howchoo.com/javascript/learn-the-slow-and-fast-way-to-append-elements-to-the-dom/
     let fragment = document.createDocumentFragment();
-    for (let y = 0; y < gridData.length; y++){
-        for (let x = 0; x < gridData[0].length; x++){
+    for (let y = yStart; y <= yEnd; y++){
+        for (let x = xStart; x <= xEnd; x++){
             //create tile element
             let e = document.createElement("div")
             e.className = "grid-spot"
@@ -95,9 +122,9 @@ function renderGrid(){
 
             //render buildings
             //spot.innerHTML = `<img src="./assets/${type}.png" width="100%" draggable = "false" onmouseover="showPlacedTooltip(this)" onmouseleave="hideTooltip()"></img>`
-            if (gridData[y][x].type){
+            if (getGrid(x,y).type){
                 let imge = document.createElement("img")
-                imge.src = `./assets/${gridData[y][x].type}.png`
+                imge.src = `./assets/${getGrid(x,y).type}.png`
                 imge.style.width = "100%"
                 imge.setAttribute("draggable", false)
                 //use a regular function, arrow functions dont allow for 'this' keyword
@@ -129,7 +156,7 @@ function showPlacedTooltip(e){
     //get the parent's element to get the x and y value
     const parentEle = e.parentElement
     const [xPos,yPos] = parentEle.id.split(",")
-    const {type,score, coins} = gridData[yPos][xPos]
+    const {type,score, coins} = getGrid(xPos,yPos)
     //display tooltip horizontally-centered, bottom of the building img
     const rect = e.getBoundingClientRect()
     const startY = (rect.top + rect.height)*1.01 //Y position to plasce the tooltip
@@ -187,13 +214,13 @@ function placeBuilding(type, x, y){
     //reset background color
     spot.style.backgroundColor = ""
     //update grid data
-    gridData[y][x].type = type
+    getGrid(x,y).type = type
     buildingCount += 1
 }
 
 function destroyBuilding(x,y){
     const spot = document.getElementById(`${x},${y}`)
-    const type = gridData[y][x].type
+    const type = getGrid(x,y).type
     //remove image in spot
     spot.innerHTML = ``
     //add class
@@ -201,7 +228,7 @@ function destroyBuilding(x,y){
     //reset background color
     spot.style.backgroundColor = ""
     //update grid data
-    gridData[y][x] = {}
+    getGrid(x,y) = {}
     updateCoins(-1)
     buildingCount -= 1
 }
@@ -225,15 +252,18 @@ function generateRandomBuilding(){
 }
 
 //return a array containing all buildings with their coordinates in a area specified by relativeCoords
+//TODO: return building obj instead of just type
 function getSurrounding(x,y, relativeCoords){
+    const [xStart, yStart, xEnd, yEnd] = getGridBounding()
+    console.log(x,y)
     if (y === undefined || x  === undefined) return null //spot is already occupied
     var out = []
     for (i in relativeCoords){
         const tileY = relativeCoords[i][0] + y
         const tileX = relativeCoords[i][1] + x
         //check for out-of-bounds search
-        if (tileY < 0 || tileX < 0 || tileY == gridSize[0] || tileX == gridSize[1]) continue
-        if (gridData[tileY][tileX].type) out.push(gridData[tileY][tileX].type)
+        if (tileY < yStart || tileX < xStart || tileY == yEnd || tileX == xEnd) continue
+        if (getGrid(tileX,tileY).type) out.push(getGrid(tileX,tileY).type)
     }
     return out
 }
@@ -246,6 +276,7 @@ function calculateScore(x,y,type){
     if (type in adjBuildingScores){
         const buildingData = adjBuildingScores[type]
         const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
+        console.log(surroundBuildings)
         let exitLoop = false
         //search for surrounding buildings that meet the database
         for (i in buildingData){
@@ -312,14 +343,15 @@ function destroyDrag(event){
 function newTurn(){
     //recalculates score and generate coins
     score = 0
-    for (var y = 0; y < gridData.length; y++){
-        for (var x = 0; x < gridData[0].length; x++){
-            const spotData = gridData[y][x]
+    const [xStart, yStart, xEnd, yEnd] = getGridBounding()
+    for (var y = yStart; y < yEnd + 1; y++){
+        for (var x = xStart; x < xEnd + 1; x++){
+            let spotData = getGrid(x,y)
             const type = spotData.type
             if (type){
                 const scoreInfo = calculateScore(x,y,type)
                 score += scoreInfo.score
-                gridData[y][x] = Object.assign(spotData,scoreInfo)
+                spotData = Object.assign(spotData,scoreInfo)
             }
         }
     }
@@ -343,7 +375,7 @@ function drop(ev) {
         const type = img.getAttribute("data-type");
         placeBuilding(type, x, y);
         //check if built on border and expand
-        if (x === 0 || x === gridSize[0]-1 || y === 0 || y === gridSize[1]-1){
+        if (false){
             gridSize = gridSize.map(x => x+10)
             //also update gridData by adding blank spots
             //right and left
@@ -379,7 +411,7 @@ function drop(ev) {
         }
         //update coin
         updateCoins(-1)
-        //newTurn()
+        newTurn()
     }else{
         const targetId = ev.target.parentElement.id
         const [x, y] = targetId.split(',').map(Number);
