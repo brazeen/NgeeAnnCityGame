@@ -7,6 +7,7 @@
     <!-- Import Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <title>Arcade Mode | Ngee Ann City</title>
 </head>
@@ -30,15 +31,15 @@
     </div>
     <div class="header">
         <div class="top-stats">
-            <div class="turn" style="margin-right: 5rem; display: flex; align-items: center; gap: 1rem;">Turn <span id="turn">1</span></div>
+            <div class="turn" style="margin-right: 2rem; display: flex; align-items: center; gap: 1rem;">Turn <span id="turn">1</span></div>
             <div class="coins img-txt">
                 <img src="./assets/coin-icon.png">
                 <div id="coins">0</div>
             </div>
-            <div class="score" style="margin-left: 5rem; display: flex; align-items: center; gap: 1rem;">Score: <span id="score">0</span></div>
+            <div class="score" style="margin-left: 2rem; display: flex; align-items: center; gap: 1rem;">Score: <span id="score">0</span></div>
             <div class="arcade-buttons">
-                <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame()">Save Game</button>
-                <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame('exit')">Exit To Main Menu</button>
+                <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame()"><i class='bx bxs-download'></i></button>
+                <button class="arcadeBtn" style="display: block;" onclick="displaySaveGame('exit')"><i class='bx bx-exit'></i></button>
             </div>
         </div>
     </div>
@@ -58,7 +59,7 @@
                 </div>
                 <div class="bulldozer-container">
                     <h4 style="font-size: 1.4rem;">Drag the bulldozer over a building to demolish it.</h4>
-                    <img id="bulldozer" src="./assets/dismantle.png" style="width: 4.375rem;" draggable="true" ondragstart="destroyDrag(event)">
+                    <img id="bulldozer" src="./assets/dismantle.png" draggable="true" ondragstart="destroyDrag(event)">
                 </div>
             </div>
         </div>
