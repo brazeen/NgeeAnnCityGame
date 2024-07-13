@@ -255,14 +255,13 @@ function generateRandomBuilding(){
 //TODO: return building obj instead of just type
 function getSurrounding(x,y, relativeCoords){
     const [xStart, yStart, xEnd, yEnd] = getGridBounding()
-    console.log(x,y)
     if (y === undefined || x  === undefined) return null //spot is already occupied
     var out = []
     for (i in relativeCoords){
         const tileY = relativeCoords[i][0] + y
         const tileX = relativeCoords[i][1] + x
         //check for out-of-bounds search
-        if (tileY < yStart || tileX < xStart || tileY == yEnd || tileX == xEnd) continue
+        if (tileY < yStart || tileX < xStart || tileY > yEnd || tileX > xEnd) continue
         if (getGrid(tileX,tileY).type) out.push(getGrid(tileX,tileY).type)
     }
     return out
@@ -276,7 +275,6 @@ function calculateScore(x,y,type){
     if (type in adjBuildingScores){
         const buildingData = adjBuildingScores[type]
         const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
-        console.log(surroundBuildings)
         let exitLoop = false
         //search for surrounding buildings that meet the database
         for (i in buildingData){
@@ -374,8 +372,9 @@ function drop(ev) {
         const img = document.getElementById(data);
         const type = img.getAttribute("data-type");
         placeBuilding(type, x, y);
+        const [xStart, yStart, xEnd, yEnd] = getGridBounding()
         //check if built on border and expand
-        if (false){
+        if (x == xStart || x == xEnd || y == yStart || y == yEnd){
             gridSize = gridSize.map(x => x+10)
             //also update gridData by adding blank spots
             //right and left
@@ -405,9 +404,7 @@ function drop(ev) {
             //remove references
             gridData = JSON.parse(JSON.stringify(gridData));
 
-            console.time('renderGrid')
             renderGrid()
-            console.timeEnd('renderGrid')
         }
         //update coin
         updateCoins(-1)
