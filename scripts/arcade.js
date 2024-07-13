@@ -261,7 +261,7 @@ function calculateScore(x,y,type){
 
 //check if place tile is connected to another building
 function canPlace(x,y){
-    //building can be placed anywhere
+    //first building can be placed anywhere
     if (!buildingCount) return true
     //spot is already occupied 
     if (y === undefined || x  === undefined) return false
