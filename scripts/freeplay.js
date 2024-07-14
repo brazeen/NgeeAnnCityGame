@@ -22,6 +22,7 @@ var gridSize = [5,5]
 var clusterData = {} //store an array of the x,y coords of the buildings associated with a cluster
 var clusterCount = 0 //store the number of clusters ever created, used for unique ids
 var buildingCount = 0 //track number buildings so we know when all tiles are filled
+var lossCount = 0 //number of turns in a row that city is making a loss
 
 //store the relative coordinates of adjacent coords for each building's clustering algorithm
 //if a building is not in here, then clustering does not apply for them
@@ -504,6 +505,12 @@ function newTurn(){
     //deal with cluster upkeep costs
     finalCoins -= clusterUpkeep()
 
+    //check if city is making a loss
+    if (finalCoins < 0){
+        lossCount += 1
+    } else{
+        lossCount = 0
+    }
     scoreLabel.innerHTML = score
     turns += 1
     turnNumber.innerText = turns
