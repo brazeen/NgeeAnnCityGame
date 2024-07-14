@@ -55,7 +55,7 @@ const coinGenerationData = {
 }
 
 //this stores the data for buildings that require upkeep individually (not affected by clustering)
-const individualCoinUpkeepData = {
+const individualUpkeepData = {
     industry: 1,
     commercial: 2,
     park: 1
@@ -178,7 +178,7 @@ function showPlacedTooltip(e){
     //get the parent's element to get the x and y value
     const parentEle = e.parentElement
     const [xPos,yPos] = parentEle.id.split(",")
-    const {type,score, coins, clusterID} = getGrid(xPos,yPos)
+    const {type,score, coins, clusterID,upkeep} = getGrid(xPos,yPos)
     //display tooltip horizontally-centered, bottom of the building img
     const rect = e.getBoundingClientRect()
     const startY = (rect.top + rect.height)*1.01 //Y position to plasce the tooltip
@@ -189,6 +189,7 @@ function showPlacedTooltip(e){
     let tooltipContent = `${type.charAt(0).toUpperCase()}${type.slice(1)}\nScore Value: ${score}\nCoins per turn: ${coins}`
     //show cluster ID if it has one
     if (clusterID != undefined) tooltipContent += `\nCluster: ${clusterID}`
+    if (upkeep) tooltipContent += `\nUpkeep Cost: ${upkeep}`
     tooltip.innerHTML = tooltipContent.replaceAll("\n","<br>")
 
     //check if tooltip is so low that it goes below the screen
@@ -337,7 +338,6 @@ function destroyBuilding(x,y){
         let stack = [[snx,sny]]
         let newCluster = [] //store the buildings in the cluster
         //run DFS search to find the cluster
-        console.log("stack start" + cluster[i])
         while (stack.length){
             const e = stack.shift()
             const [nx,ny] = e
@@ -353,10 +353,8 @@ function destroyBuilding(x,y){
                 if (getGrid(tileX,tileY).type == type && !([tileX,tileY] in visited)) stack.push([tileX,tileY])
             }
             getGrid(nx,ny).clusterID = clusterID
-            console.log(stack)
 
         }
-        console.log(visited)
         clusterData[clusterID] = newCluster
     }
     delete clusterData[building.clusterID]
@@ -457,6 +455,29 @@ function destroyDrag(event){
     action = "destroy"
 }
 
+function clusterUpkeep(){
+    let out = 0
+    for (const [k,v] of Object.entries(clusterData)) {
+        //get the type of the cluster
+        const type = getGrid(...v[0]).type
+        if (type == "residential"){
+            out += 1
+        }else if (type == "road"){
+            if (v.length == 1){
+                out += 1
+                //update upkeep property
+                getGrid(...v[0]).upkeep = 1
+            }else{
+                //update upkeep property
+                v.forEach(e => {
+                    getGrid(...e).upkeep = 0
+                })
+            }
+        }
+    }
+    return out
+}
+
 function newTurn(){
     //recalculates score and generate coins
     score = 0
@@ -470,10 +491,18 @@ function newTurn(){
                 const scoreInfo = calculateScore(x,y,type)
                 score += scoreInfo.score
                 finalCoins += coinGenerationData[type]
-                spotData = Object.assign(spotData,scoreInfo, {coins: coinGenerationData[type]})
+                let upkeepObj = {upkeep:0}
+                //calculate upkeep
+                if (type in individualUpkeepData){
+                    upkeepObj.upkeep = individualUpkeepData[type]
+                    finalCoins -= individualUpkeepData[type]
+                }
+                spotData = Object.assign(spotData,scoreInfo, {coins: coinGenerationData[type]},upkeepObj)
             }
         }
     }
+    //deal with cluster upkeep costs
+    finalCoins -= clusterUpkeep()
 
     scoreLabel.innerHTML = score
     turns += 1
