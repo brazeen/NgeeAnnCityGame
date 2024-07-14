@@ -261,7 +261,6 @@ function placeBuilding(type, x, y){
         for (let i= 1; i < clusters.length; i++){
             const clusterArr = clusterData[clusters[i]]
             finalArray = finalArray.concat(clusterArr)
-            console.log(finalArray,clusterArr)
             //update the clusterID for the building objs
             clusterArr.forEach(j => {
                 [cbx, cby] = j //cluster building x, cluster building y
@@ -270,22 +269,19 @@ function placeBuilding(type, x, y){
             
             delete clusterData[clusters[i]]//delete the cluster 
         }
-        console.log(finalArray)
         clusterData[clusterID] = finalArray
 
     }
 
     building.clusterID = clusterID
     clusterData[clusterID].push([x,y])
-    console.log(clusterData)
     
-
-
 }
 
 function destroyBuilding(x,y){
     const spot = document.getElementById(`${x},${y}`)
-    const type = getGrid(x,y).type
+    let building = getGrid(x,y)
+    const type = building.type
     //remove image in spot
     spot.innerHTML = ``
     //add class
@@ -293,9 +289,63 @@ function destroyBuilding(x,y){
     //reset background color
     spot.style.backgroundColor = ""
     //update grid data
-    getGrid(x,y) = {}
     updateCoins(-1)
-    buildingCount -= 1
+
+    /* 
+    Break the single cluster up into smaller clusters
+    Done with DFS searching
+    the array of buildings in the cluster are nodes to explore
+    if a node is explored, remove it from the prior array
+    also have a visited list and stack list to track adjacent nodes to the node we want to explore 
+    visited list is an obj for fastest lookup time (tar in obj)
+    */
+
+    const [xStart, yStart, xEnd, yEnd] = getGridBounding()
+    //get cluster
+    let cluster = clusterData[building.clusterID]
+    let visited = {}
+    visited[[x,y]] = 1 //add the deleted building to visited so it gets skipped
+    //repeat for all nodes
+    console.log(cluster)
+    console.log(gridData)
+    for (let i = 0; i < cluster.length; i++){
+        //check if node is already explored
+
+        if (cluster[i] in visited) continue
+        const clusterID = clusterCount
+        clusterCount++
+        const [snx,sny] = cluster[i]
+        //initalise stack for next round of dfs
+        let stack = [[snx,sny]]
+        let newCluster = [] //store the buildings in the cluster
+        //run DFS search to find the cluster
+        console.log("stack start" + cluster[i])
+        while (stack.length){
+            const e = stack.shift()
+            const [nx,ny] = e
+            visited[e] = 1
+            newCluster.push(e)
+            //get adjacent
+            for (j in adjRelativeCoords){
+                const tileY = adjRelativeCoords[j][0] + ny
+                const tileX = adjRelativeCoords[j][1] + nx
+                //check for out-of-bounds search
+                if (tileY < yStart || tileX < xStart || tileY > yEnd || tileX > xEnd) continue
+                //get buildings of the same type and havent been visited
+                if (getGrid(tileX,tileY).type == type && !([tileX,tileY] in visited)) stack.push([tileX,tileY])
+            }
+            getGrid(nx,ny).clusterID = clusterID
+            console.log(stack)
+
+        }
+        console.log(visited)
+        clusterData[clusterID] = newCluster
+    }
+    delete clusterData[building.clusterID]
+    console.log(clusterData)
+    building = {}
+
+
 }
 
 function generateRandomBuilding(){
@@ -419,7 +469,8 @@ function newTurn(){
 function drop(ev) {
     ev.preventDefault();
     if (action == "build"){
-        const targetId = ev.target.id
+        const e = ev.target
+        const targetId = e.id
         const [x, y] = targetId.split(',').map(Number);
         if (!canPlace(x,y)) return
 
@@ -497,7 +548,7 @@ function updateCoins(value = 0){
 
 function checkIfGameOver() {
     // Check for game end
-    if (coins < 1 || buildingCount == gridSize[0] * gridSize[1]) {
+    if (coins < 1) {
       isGameOver = true;
   
       let lblist = localStorage.getItem("arcadeLeaderboard");
