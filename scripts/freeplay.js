@@ -9,6 +9,7 @@ const repeatFile = document.getElementById("repeat-file")
 const initialsPopup = document.getElementById("initials-popup")
 const tooltip = document.getElementById("tooltip")
 const adjRelativeCoords = [[0,1],[0,-1],[1,0],[-1,0],[1,-1],[1,1],[-1,1],[-1,-1]] //relative coordinates of adjacent tiles
+const connectRelativeCoords =  [[0,1],[0,-1],[1,0],[-1,0]] //relative coordinates of connected tiles (N-S-E-W)
 
 //to test, i set to 2
 var coins = 16
@@ -21,11 +22,13 @@ var gridSize = [5,5]
 var clusterData = {} //store an array of the x,y coords of the buildings associated with a cluster
 var clusterCount = 0 //store the number of clusters ever created, used for unique ids
 var buildingCount = 0 //track number buildings so we know when all tiles are filled
-const buildings = {
-    "residential": [1,1],
-    "industry": [2,1]
-}
 
+//store the relative coordinates of adjacent coords for each building's clustering algorithm
+//if a building is not in here, then clustering does not apply for them
+const clusterAdjCoords = {
+    "residential": adjRelativeCoords,
+    "road": connectRelativeCoords
+}
 
 const adjBuildingScores = { //only store scoring data for buildings that have scores based on adjacent buildings
     "residential": [
@@ -49,6 +52,13 @@ const coinGenerationData = {
     commercial: 3,
     park: 0,
     road: 0
+}
+
+//this stores the data for buildings that require upkeep individually (not affected by clustering)
+const individualCoinUpkeepData = {
+    industry: 1,
+    commercial: 2,
+    park: 1
 }
 
 //generate the spots with coordinates as their id
@@ -176,7 +186,9 @@ function showPlacedTooltip(e){
 
     tooltip.style.visibility = "visible"
     //capitalise first letter of type
-    const tooltipContent = `${type.charAt(0).toUpperCase()}${type.slice(1)}\nScore Value: ${score}\nCoins per turn: ${coins}\nCluster ID: ${clusterID}`
+    let tooltipContent = `${type.charAt(0).toUpperCase()}${type.slice(1)}\nScore Value: ${score}\nCoins per turn: ${coins}`
+    //show cluster ID if it has one
+    if (clusterID != undefined) tooltipContent += `\nCluster: ${clusterID}`
     tooltip.innerHTML = tooltipContent.replaceAll("\n","<br>")
 
     //check if tooltip is so low that it goes below the screen
@@ -232,6 +244,8 @@ function placeBuilding(type, x, y){
     //update grid data
     building.type = type
     
+    //check if clustering is required for the building
+    if (!(type in clusterAdjCoords)) return
     //apply the build cluster algorithm
     /*
     When a building is placed, checked for adjacent buildings that are the same type as it.
@@ -243,7 +257,7 @@ function placeBuilding(type, x, y){
 
     //get only buildings that match its type
     //also no repeated clusters
-    const adjBuildings = getSurrounding(x,y,adjRelativeCoords).filter((e,i,arr) => e.type == type && i === arr.findIndex(x => x.clusterID === e.clusterID))
+    const adjBuildings = getSurrounding(x,y,clusterAdjCoords[type]).filter((e,i,arr) => e.type == type && i === arr.findIndex(x => x.clusterID === e.clusterID))
 
     let clusterID = clusterCount
     if (! adjBuildings.length){
@@ -290,6 +304,11 @@ function destroyBuilding(x,y){
     spot.style.backgroundColor = ""
     //update grid data
     updateCoins(-1)
+    //check if clustering applies to the building
+    if (!(type in clusterAdjCoords)){
+        building = {}
+        return
+    }
 
     /* 
     Break the single cluster up into smaller clusters
@@ -302,12 +321,11 @@ function destroyBuilding(x,y){
 
     const [xStart, yStart, xEnd, yEnd] = getGridBounding()
     //get cluster
+    const relativeCoords = clusterAdjCoords[type]
     let cluster = clusterData[building.clusterID]
     let visited = {}
     visited[[x,y]] = 1 //add the deleted building to visited so it gets skipped
     //repeat for all nodes
-    console.log(cluster)
-    console.log(gridData)
     for (let i = 0; i < cluster.length; i++){
         //check if node is already explored
 
@@ -326,9 +344,9 @@ function destroyBuilding(x,y){
             visited[e] = 1
             newCluster.push(e)
             //get adjacent
-            for (j in adjRelativeCoords){
-                const tileY = adjRelativeCoords[j][0] + ny
-                const tileX = adjRelativeCoords[j][1] + nx
+            for (j in relativeCoords){
+                const tileY = relativeCoords[j][0] + ny
+                const tileX = relativeCoords[j][1] + nx
                 //check for out-of-bounds search
                 if (tileY < yStart || tileX < xStart || tileY > yEnd || tileX > xEnd) continue
                 //get buildings of the same type and havent been visited
@@ -342,7 +360,6 @@ function destroyBuilding(x,y){
         clusterData[clusterID] = newCluster
     }
     delete clusterData[building.clusterID]
-    console.log(clusterData)
     building = {}
 
 
@@ -358,7 +375,7 @@ function generateRandomBuilding(){
         //if choice is the same, change one to make it different
         choice2 = Math.floor(Math.random() * 5)
     }
-    choice1 = typeList[0]
+    choice1 = typeList[4]
     choice2 = typeList[choice2]
     const randomdiv1 = document.getElementById('randombuilding-1')
     const randomdiv2 = document.getElementById('randombuilding-2')
@@ -416,12 +433,10 @@ function calculateScore(x,y,type){
             }
         }
     }else if (type == "road"){
-        const rowRelativeCoords = [[0,1],[0,-1],[1,0],[-1,0]]
-        const rowBuildings = getSurrounding(x,y,rowRelativeCoords)
+        const rowBuildings = getSurrounding(x,y,connectRelativeCoords)
         finalScore = rowBuildings.filter(x => x.type === "road").length
         
     }
-    updateCoins(finalCoins)
     return {score: finalScore}
 }
 
@@ -445,6 +460,7 @@ function destroyDrag(event){
 function newTurn(){
     //recalculates score and generate coins
     score = 0
+    let finalCoins = 0
     const [xStart, yStart, xEnd, yEnd] = getGridBounding()
     for (var y = yStart; y < yEnd + 1; y++){
         for (var x = xStart; x < xEnd + 1; x++){
@@ -453,6 +469,7 @@ function newTurn(){
             if (type){
                 const scoreInfo = calculateScore(x,y,type)
                 score += scoreInfo.score
+                finalCoins += coinGenerationData[type]
                 spotData = Object.assign(spotData,scoreInfo, {coins: coinGenerationData[type]})
             }
         }
@@ -461,6 +478,7 @@ function newTurn(){
     scoreLabel.innerHTML = score
     turns += 1
     turnNumber.innerText = turns
+    updateCoins(finalCoins)
     generateRandomBuilding()
     checkIfGameOver()
 }
@@ -528,11 +546,12 @@ function drop(ev) {
 //change backrgound colour when drag is hovered over tile
 function spotDragEnter(event){
     const [x, y] = event.target.id.split(',').map(Number)
-    if (!canPlace(x,y)) return
+    const place = canPlace(x,y)
     if (action == "destroy"){
-        if (y != undefined && x != undefined) return
+        if (place) return
         event.target.style.backgroundColor = "red"
     }else{
+        if (!place) return
         event.target.style.backgroundColor = "lightblue"
     }
 }
