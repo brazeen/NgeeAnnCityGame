@@ -602,11 +602,11 @@ function updateCoins(value = 0){
 }
 
 function checkIfGameOver() {
-    // Check for game end
+    // Check for game end with loss
     if (coins < 1) {
       isGameOver = true;
   
-      let lblist = localStorage.getItem("arcadeLeaderboard");
+      let lblist = localStorage.getItem("freeplayLeaderboard");
       if (!lblist) {
         lblist = [];
       } else {
@@ -661,7 +661,7 @@ function checkIfGameOver() {
             }
 
             // Update local storage with the new leaderboard
-            localStorage.setItem("arcadeLeaderboard", JSON.stringify(leaderboard));
+            localStorage.setItem("freeplayLeaderboard", JSON.stringify(leaderboard));
 
             // Clean up event listener to prevent memory leaks
             document.getElementById('initialsForm').removeEventListener('submit', onSubmit);
