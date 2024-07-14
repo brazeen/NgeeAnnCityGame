@@ -293,6 +293,7 @@ html, body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    visibility: hidden;
 }
 
 #gameover-popup p {
@@ -386,7 +387,7 @@ html, body {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 20;
-    display: none; /* Hide popup by default */
+    display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;

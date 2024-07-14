@@ -665,7 +665,9 @@ function checkIfGameOver() {
 
             // Clean up event listener to prevent memory leaks
             document.getElementById('initialsForm').removeEventListener('submit', onSubmit);
-        }); // Ensure the event listener is triggered only once
+            // Ensure the event listener is triggered only once
+            gameoverpopup.style.visibility = "visible"; // display gameover popup only when player has submitted their initials
+        }); 
     }
 }
 
