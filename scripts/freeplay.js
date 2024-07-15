@@ -603,7 +603,7 @@ function updateCoins(value = 0){
 
 function checkIfGameOver() {
     // Check for game end with loss
-    if (coins < 1) {
+    if (lossCount >= 20){
       isGameOver = true;
   
       let lblist = localStorage.getItem("freeplayLeaderboard");
