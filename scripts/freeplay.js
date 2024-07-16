@@ -383,8 +383,8 @@ function generateRandomBuilding(){
 }
 
 //return a array containing all buildings with their coordinates in a area specified by relativeCoords
-//coordOnly: return the coords of the building instead of the building obj
-function getSurrounding(x,y, relativeCoords, coordOnly = false){
+//withCoords: return the coords of the building and the building obj
+function getSurrounding(x,y, relativeCoords, withCoords = false){
     const [xStart, yStart, xEnd, yEnd] = getGridBounding()
     if (y === undefined || x  === undefined) return null //spot is already occupied
     var out = []
@@ -394,8 +394,8 @@ function getSurrounding(x,y, relativeCoords, coordOnly = false){
         //check for out-of-bounds search
         if (tileY < yStart || tileX < xStart || tileY > yEnd || tileX > xEnd) continue
         if (getGrid(tileX,tileY).type){
-            if (coordOnly){
-                out.push([tileX,tileY])
+            if (withCoords){
+                out.push([[tileX,tileY],getGrid(tileX,tileY)])
             }else{
                 out.push(getGrid(tileX,tileY))
             }
@@ -422,48 +422,6 @@ function adjacentBuilder(){
     }
     return out
 
-}
-
-function calculateScore(x,y,type){
-    var finalScore = 0
-    var finalCoins = 0
-    //buildings that use adjacent scoring
-    if (type in adjBuildingScores){
-        const buildingData = adjBuildingScores[type]
-        const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
-        let exitLoop = false
-        //search for surrounding buildings that meet the database
-        for (i in buildingData){
-            data = buildingData[i]
-            for (j in surroundBuildings){
-                if (data[0] == surroundBuildings[j].type){
-                    if (data[2]){ //check if the "only" constrain is true, limit the score no matter the surrounding buiildings
-                        finalScore = data[1]
-                        //stop evaluating anymore buildings
-                        exitLoop = true
-                        break
-                    }
-                    finalScore += data[1]
-                }
-            }
-            if (exitLoop) break
-        }
-
-    }else if (type == "industry"){
-        finalScore = 1
-        //generate coins
-        const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
-        for (i in surroundBuildings){
-            if (surroundBuildings[i].type == "residential"){
-               finalCoins = 1
-            }
-        }
-    }else if (type == "road"){
-        const rowBuildings = getSurrounding(x,y,connectRelativeCoords)
-        finalScore = rowBuildings.filter(x => x.type === "road").length
-        
-    }
-    return {score: finalScore}
 }
 
 //allow dropping on grid spots
@@ -511,12 +469,28 @@ function newTurn(){
     score = 0
     let finalCoins = 0
     const [xStart, yStart, xEnd, yEnd] = getGridBounding()
+    const adjacentData = adjacentBuilder()
     for (var y = yStart; y < yEnd + 1; y++){
         for (var x = xStart; x < xEnd + 1; x++){
             let spotData = getGrid(x,y)
             const type = spotData.type
             if (type){
-                const scoreInfo = calculateScore(x,y,type)
+                //calculate score
+                if (type == "industry"){
+                    finalScore = 1
+                    //generate coins
+                    const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
+                    for (i in surroundBuildings){
+                        if (surroundBuildings[i].type == "residential"){
+                           finalCoins = 1
+                        }
+                    }
+                }else if (type == "road"){
+                    const rowBuildings = getSurrounding(x,y,connectRelativeCoords)
+                    finalScore = rowBuildings.filter(x => x.type === "road").length
+                    
+                }
+                const scoreInfo =  {score: finalScore}
                 score += scoreInfo.score
                 finalCoins += coinGenerationData[type]
                 let upkeepObj = {upkeep:0}
@@ -529,6 +503,8 @@ function newTurn(){
             }
         }
     }
+    //calculate score for adjacent buildings
+
     //deal with cluster upkeep costs
     finalCoins -= clusterUpkeep()
 
