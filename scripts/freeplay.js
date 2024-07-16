@@ -383,7 +383,8 @@ function generateRandomBuilding(){
 }
 
 //return a array containing all buildings with their coordinates in a area specified by relativeCoords
-function getSurrounding(x,y, relativeCoords){
+//coordOnly: return the coords of the building instead of the building obj
+function getSurrounding(x,y, relativeCoords, coordOnly = false){
     const [xStart, yStart, xEnd, yEnd] = getGridBounding()
     if (y === undefined || x  === undefined) return null //spot is already occupied
     var out = []
@@ -392,7 +393,13 @@ function getSurrounding(x,y, relativeCoords){
         const tileX = relativeCoords[i][1] + x
         //check for out-of-bounds search
         if (tileY < yStart || tileX < xStart || tileY > yEnd || tileX > xEnd) continue
-        if (getGrid(tileX,tileY).type) out.push(getGrid(tileX,tileY))
+        if (getGrid(tileX,tileY).type){
+            if (coordOnly){
+                out.push([tileX,tileY])
+            }else{
+                out.push(getGrid(tileX,tileY))
+            }
+        }
     }
     return out
 }
@@ -402,11 +409,18 @@ function getSurrounding(x,y, relativeCoords){
 //value: array of coordinates of buildings in that street
 function adjacentBuilder(){
     let out = {}
-    const [xStart, yStart, xEnd, yEnd] = getGridBounding()
-    for (var y = yStart; y < yEnd + 1; y++){
-        for (var x = xStart; x < xEnd + 1; x++){
-        }
+    //for each cluster of roads
+    for (const [k,v] of Object.entries(clusterData)) {
+        if (getGrid(v[0]).type != "road") continue
+        out[k] = []
+        //get the buildings connected to each road in the cluster
+        v.forEach(e => {
+            const [x,y] = e
+            const buildings = getSurrounding(x,y,connectRelativeCoords,true)
+            out[k] = out[k].concat(buildings)
+        })
     }
+    return out
 
 }
 
