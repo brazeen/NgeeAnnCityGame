@@ -397,6 +397,19 @@ function getSurrounding(x,y, relativeCoords){
     return out
 }
 
+//return a object of buildings adjacent to each other (connected to the same street)
+//key: street (road clusterID)
+//value: array of coordinates of buildings in that street
+function adjacentBuilder(){
+    let out = {}
+    const [xStart, yStart, xEnd, yEnd] = getGridBounding()
+    for (var y = yStart; y < yEnd + 1; y++){
+        for (var x = xStart; x < xEnd + 1; x++){
+        }
+    }
+
+}
+
 function calculateScore(x,y,type){
     var finalScore = 0
     var finalCoins = 0
