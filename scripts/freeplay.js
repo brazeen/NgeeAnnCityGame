@@ -416,7 +416,7 @@ function adjacentBuilder(){
         //get the buildings connected to each road in the cluster
         v.forEach(e => {
             const [x,y] = e
-            const buildings = getSurrounding(x,y,connectRelativeCoords,true)
+            const buildings = getSurrounding(x,y,connectRelativeCoords)
             out[k] = out[k].concat(buildings)
         })
     }
