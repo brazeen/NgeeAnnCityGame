@@ -15,4 +15,11 @@ arcadeLbList.forEach((entry) => {
     arcadeLeaderboard.appendChild(listing)
 })
 
+freeplayLbList.forEach((entry) => {
+    console.log(entry)
+    let listing = document.createElement("li")
+    listing.textContent = `${entry.name}: ${entry.score}`
+    freeplayLeaderboard.appendChild(listing)
+})
+
 

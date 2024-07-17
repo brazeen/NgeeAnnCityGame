@@ -1,5 +1,4 @@
 const grid = document.getElementById("game-grid")
-const coinLabel = document.getElementById("coins")
 const scoreLabel = document.getElementById("score")
 const gameoverpopup = document.getElementById("gameover-popup")
 const finalScore = document.getElementById("finalscore")
@@ -12,7 +11,7 @@ const adjRelativeCoords = [[0,1],[0,-1],[1,0],[-1,0],[1,-1],[1,1],[-1,1],[-1,-1]
 const connectRelativeCoords =  [[0,1],[0,-1],[1,0],[-1,0]] //relative coordinates of connected tiles (N-S-E-W)
 
 //to test, i set to 2
-var coins = 16
+var coins = Number.MAX_SAFE_INTEGER;
 var turns = 1
 var score = 0
 var isGameOver = false
@@ -85,7 +84,6 @@ if (playSave != null){
     score = save.score
     gridData = save.gridData
     //update html elements
-    coinLabel.innerText = coins
     scoreLabel.innerText = score
     turnNumber.innerText = turns
 }
@@ -601,7 +599,6 @@ function spotDragLeave(event){
 
 function updateCoins(value = 0){
     coins += value
-    coinLabel.innerText = coins
 }
 
 function checkIfGameOver() {
@@ -734,7 +731,7 @@ function shallowEqual(object1, object2) {
 
 function createSaveObj(){
     return {
-        type: "arcade",
+        type: "freeplay",
         turn: turns,
         coins: coins,
         score: score,
