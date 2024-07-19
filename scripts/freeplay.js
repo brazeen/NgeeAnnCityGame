@@ -382,7 +382,7 @@ function generateRandomBuilding(){
 
 //return a array containing all buildings with their coordinates in a area specified by relativeCoords
 //withCoords: return the coords of the building and the building obj
-function getSurrounding(x,y, relativeCoords, withCoords = false){
+function getSurrounding(x,y, relativeCoords, adjacentMode = null){
     const [xStart, yStart, xEnd, yEnd] = getGridBounding()
     if (y === undefined || x  === undefined) return null //spot is already occupied
     var out = []
@@ -391,11 +391,18 @@ function getSurrounding(x,y, relativeCoords, withCoords = false){
         const tileX = relativeCoords[i][1] + x
         //check for out-of-bounds search
         if (tileY < yStart || tileX < xStart || tileY > yEnd || tileX > xEnd) continue
-        if (getGrid(tileX,tileY).type){
-            if (withCoords){
-                out.push([[tileX,tileY],getGrid(tileX,tileY)])
-            }else{
-                out.push(getGrid(tileX,tileY))
+        let building = getGrid(tileX,tileY)
+        if (adjacentMode != null){
+            if (building.type && building.type != "road"){
+                if (!("streets" in building)){
+                    building.streets = []
+                }
+                building.streets.push(adjacentMode)
+                out.push([[tileX,tileY],building])
+            }
+        }else{
+            if (building.type){
+                out.push(building)
             }
         }
     }
@@ -409,14 +416,63 @@ function adjacentBuilder(){
     let out = {}
     //for each cluster of roads
     for (const [k,v] of Object.entries(clusterData)) {
-        if (getGrid(v[0]).type != "road") continue
+        if (getGrid(...v[0]).type != "road") continue
         out[k] = []
         //get the buildings connected to each road in the cluster
         v.forEach(e => {
             const [x,y] = e
-            const buildings = getSurrounding(x,y,connectRelativeCoords)
+            const buildings = getSurrounding(x,y,connectRelativeCoords, k)
             out[k] = out[k].concat(buildings)
         })
+    }
+    return out
+
+}
+
+function calculateAdjScore(){
+    const adjData = adjacentBuilder()
+    let out = 0
+    let adjBuildings = []
+    //get a array of all buildings in here
+    for (const [k,v] of Object.entries(adjData)) {
+        adjBuildings = adjBuildings.concat(v)
+    }
+    //convert to set to remove duplicates
+    adjBuildings = new Set(adjBuildings)
+    for (const x of adjBuildings){
+        const building = x[1]
+        //get buildings adjacent to the target
+        let adj = []
+        for (clusterID in building.streets){
+            adj = adj.concat(adjData[clusterID])
+        }
+        //remove the target building
+        adj = adj.filter(item => item !== x && item !== undefined)
+        //convert to set to remove duplicates
+        adj = new Set(adj)
+        //now calculate score
+        const buildingData = adjBuildingScores[building.type]
+        let buildingScore = 0
+        let exitLoop = false
+        for (i in buildingData){
+            const data = buildingData[i]
+            for (const z of adj){
+                const j = z[1].type
+                if (data[0] == j){
+                    if (data[2]){ //check if the "only" constrain is true, limit the score no matter the surrounding buiildings
+                        buildingScore = data[1]
+                        //stop evaluating anymore buildings
+                        exitLoop = true
+                        break
+                    }
+                    buildingScore += data[1]
+                }
+            }
+            if (exitLoop) break
+        }
+        building.score = buildingScore
+        console.log(building)
+        out += buildingScore
     }
     return out
 
@@ -464,18 +520,19 @@ function clusterUpkeep(){
 
 function newTurn(){
     //recalculates score and generate coins
-    score = 0
+    let score = 0
     let finalCoins = 0
+    let totalScore = 0
     const [xStart, yStart, xEnd, yEnd] = getGridBounding()
-    const adjacentData = adjacentBuilder()
     for (var y = yStart; y < yEnd + 1; y++){
         for (var x = xStart; x < xEnd + 1; x++){
+            let scoreOut = 0
             let spotData = getGrid(x,y)
             const type = spotData.type
             if (type){
                 //calculate score
                 if (type == "industry"){
-                    finalScore = 1
+                    scoreOut= 1
                     //generate coins
                     const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
                     for (i in surroundBuildings){
@@ -485,10 +542,10 @@ function newTurn(){
                     }
                 }else if (type == "road"){
                     const rowBuildings = getSurrounding(x,y,connectRelativeCoords)
-                    finalScore = rowBuildings.filter(x => x.type === "road").length
+                    scoreOut  = rowBuildings.filter(x => x.type === "road").length
                     
                 }
-                const scoreInfo =  {score: finalScore}
+                const scoreInfo =  {score: scoreOut}
                 score += scoreInfo.score
                 finalCoins += coinGenerationData[type]
                 let upkeepObj = {upkeep:0}
@@ -502,7 +559,7 @@ function newTurn(){
         }
     }
     //calculate score for adjacent buildings
-
+    score += calculateAdjScore()
     //deal with cluster upkeep costs
     finalCoins -= clusterUpkeep()
 
