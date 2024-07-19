@@ -815,6 +815,10 @@ function createSaveObj(){
         coins: coins,
         score: score,
         gridData: gridData,
+        clusterData: clusterData,
+        gridSize: gridSize,
+        clusterCount: clusterCount,
+        lossCount: lossCount
     }
 }
 
