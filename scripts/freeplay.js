@@ -113,6 +113,13 @@ function getGrid(x,y){
     const [xOffset, yOffset] = getGridOffset()
     return gridData[yInt+yOffset][xInt+xOffset]
 }
+//remove the building from grid
+function removeGrid(x,y){
+    const xInt = parseInt(x)
+    const yInt = parseInt(y)
+    const [xOffset, yOffset] = getGridOffset()
+    gridData[yInt+yOffset][xInt+xOffset] = {}
+}
 
 //delete the contents of the grid and rebuild it
 function renderGrid(){
@@ -306,7 +313,7 @@ function destroyBuilding(x,y){
     updateCoins(-1)
     //check if clustering applies to the building
     if (!(type in clusterAdjCoords)){
-        building = {}
+        removeGrid(x,y)
         return
     }
 
@@ -357,7 +364,7 @@ function destroyBuilding(x,y){
         clusterData[clusterID] = newCluster
     }
     delete clusterData[building.clusterID]
-    building = {}
+    removeGrid(x,y)
 
 
 }
@@ -524,6 +531,7 @@ function newTurn(){
     let score = 0
     let finalCoins = 0
     let totalScore = 0
+    console.log(gridData)
     const [xStart, yStart, xEnd, yEnd] = getGridBounding()
     for (var y = yStart; y < yEnd + 1; y++){
         for (var x = xStart; x < xEnd + 1; x++){
@@ -622,7 +630,7 @@ function drop(ev) {
                 gridData.unshift(rowToAdd);
             }
             //remove references
-            gridData = JSON.parse(JSON.stringify(gridData));
+            gridData = JSON.parse(JSON.stringify(gridData))
 
             renderGrid()
         }
