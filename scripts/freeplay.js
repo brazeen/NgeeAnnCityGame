@@ -431,7 +431,6 @@ function adjacentBuilder(){
 
 function calculateAdjScore(){
     const adjData = adjacentBuilder()
-    console.log(adjData)
     let out = 0
     let adjBuildings = []
     //get a array of all buildings in here
@@ -440,7 +439,6 @@ function calculateAdjScore(){
     }
     //convert to set to remove duplicates
     adjBuildings = new Set(adjBuildings)
-    console.log(adjBuildings)
     for (const x of adjBuildings){
         const building = x[1]
         //get buildings adjacent to the target
@@ -448,7 +446,6 @@ function calculateAdjScore(){
         for (const clusterID of building.streets){
             adj = adj.concat(adjData[clusterID])
         }
-        console.log(adj)
         //remove the target building
         adj = adj.filter(item => item !== x && item !== undefined)
         //convert to set to remove duplicates
