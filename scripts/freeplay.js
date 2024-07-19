@@ -88,9 +88,18 @@ if (playSave != null){
     turnNumber.innerText = turns
 }
 
+//remove duplicates from an array
+//convert the elements to a string and compare the string
+function removeDuplicate(arr){
+    return arr.filter((obj1, i, arr) => 
+        arr.findIndex(obj2 => 
+        JSON.stringify(obj2) === JSON.stringify(obj1)
+        ) === i
+)
+}
+
 //return the offset to convert coords to regular array indexing
 //return an array [xOffset, yOffset]
-
 function getGridOffset(){
     return gridSize.map(x => parseInt((x-1)/2))
 }
@@ -431,6 +440,8 @@ function adjacentBuilder(){
             const buildings = getSurrounding(x,y,connectRelativeCoords, k)
             out[k] = out[k].concat(buildings)
         })
+        //remove duplicates
+        out[k] = removeDuplicate(out[k])
     }
     return out
 
@@ -440,12 +451,13 @@ function calculateAdjScore(){
     const adjData = adjacentBuilder()
     let out = 0
     let adjBuildings = []
+    //console.log(adjData)
     //get a array of all buildings in here
     for (const [k,v] of Object.entries(adjData)) {
         adjBuildings = adjBuildings.concat(v)
     }
-    //convert to set to remove duplicates
-    adjBuildings = new Set(adjBuildings)
+    //remove duplicates
+    adjBuildings = removeDuplicate(adjBuildings)
     for (const x of adjBuildings){
         const building = x[1]
         //get buildings adjacent to the target
@@ -454,9 +466,10 @@ function calculateAdjScore(){
             adj = adj.concat(adjData[clusterID])
         }
         //remove the target building
-        adj = adj.filter(item => item !== x && item !== undefined)
-        //convert to set to remove duplicates
-        adj = new Set(adj)
+        adj = adj.filter(item => JSON.stringify(item) !== JSON.stringify(x) && item !== undefined)
+        //remove duplicates
+        adj = adjBuildings = removeDuplicate(adj)
+        console.log(adj)
         //now calculate score
         const buildingData = adjBuildingScores[building.type]
         let buildingScore = 0
@@ -531,7 +544,6 @@ function newTurn(){
     let score = 0
     let finalCoins = 0
     let totalScore = 0
-    console.log(gridData)
     const [xStart, yStart, xEnd, yEnd] = getGridBounding()
     for (var y = yStart; y < yEnd + 1; y++){
         for (var x = xStart; x < xEnd + 1; x++){
