@@ -83,6 +83,10 @@ if (playSave != null){
     turns = save.turn
     score = save.score
     gridData = save.gridData
+    clusterCount = save.clusterCount
+    clusterData = save.clusterData
+    gridSize = save.gridSize
+    lossCount = save.lossCount
     //update html elements
     scoreLabel.innerText = score
     turnNumber.innerText = turns
