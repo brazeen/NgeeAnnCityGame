@@ -455,7 +455,6 @@ function calculateAdjScore(){
     const adjData = adjacentBuilder()
     let out = 0
     let adjBuildings = []
-    //console.log(adjData)
     //get a array of all buildings in here
     for (const [k,v] of Object.entries(adjData)) {
         adjBuildings = adjBuildings.concat(v)
@@ -473,7 +472,6 @@ function calculateAdjScore(){
         adj = adj.filter(item => JSON.stringify(item) !== JSON.stringify(x) && item !== undefined)
         //remove duplicates
         adj = adjBuildings = removeDuplicate(adj)
-        console.log(adj)
         //now calculate score
         const buildingData = adjBuildingScores[building.type]
         let buildingScore = 0
@@ -498,7 +496,6 @@ function calculateAdjScore(){
         building.score = buildingScore
         out += buildingScore
     }
-    console.log(out)
     return out
 
 }
@@ -583,7 +580,6 @@ function newTurn(){
             }
         }
     }
-    console.log(score)
     //calculate score for adjacent buildings
     score += calculateAdjScore()
     //deal with cluster upkeep costs
