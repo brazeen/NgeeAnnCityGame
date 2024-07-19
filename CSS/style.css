@@ -110,8 +110,12 @@
     }
 
     .indexBtn {
-        width: 90%;   /* Make buttons wider */
+        width: 35%;   /* Make buttons wider */
         margin: 5px 0; /* Adjust button spacing */
+    }
+
+    .load-game-container {
+        width: 30%;
     }
 }
 
@@ -332,6 +336,12 @@ html, body {
     padding: 0.5vw 1vw;
     margin-top: 1.1vw;
     background: none;
+    transition: ease-in-out 0.3s;
+}
+
+.load-game-button:hover {
+    cursor: pointer;
+    background-color: gold;
 }
 
 #leaderboardBody {
