@@ -431,6 +431,7 @@ function adjacentBuilder(){
 
 function calculateAdjScore(){
     const adjData = adjacentBuilder()
+    console.log(adjData)
     let out = 0
     let adjBuildings = []
     //get a array of all buildings in here
@@ -439,13 +440,15 @@ function calculateAdjScore(){
     }
     //convert to set to remove duplicates
     adjBuildings = new Set(adjBuildings)
+    console.log(adjBuildings)
     for (const x of adjBuildings){
         const building = x[1]
         //get buildings adjacent to the target
         let adj = []
-        for (clusterID in building.streets){
+        for (const clusterID of building.streets){
             adj = adj.concat(adjData[clusterID])
         }
+        console.log(adj)
         //remove the target building
         adj = adj.filter(item => item !== x && item !== undefined)
         //convert to set to remove duplicates
@@ -472,9 +475,9 @@ function calculateAdjScore(){
         }
         building.streets = [] //reset the streets it belongs too. No longer needed until next adjacentBuild
         building.score = buildingScore
-        console.log(building)
         out += buildingScore
     }
+    console.log(out)
     return out
 
 }
@@ -559,6 +562,7 @@ function newTurn(){
             }
         }
     }
+    console.log(score)
     //calculate score for adjacent buildings
     score += calculateAdjScore()
     //deal with cluster upkeep costs
