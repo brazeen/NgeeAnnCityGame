@@ -470,6 +470,7 @@ function calculateAdjScore(){
             }
             if (exitLoop) break
         }
+        building.streets = [] //reset the streets it belongs too. No longer needed until next adjacentBuild
         building.score = buildingScore
         console.log(building)
         out += buildingScore
@@ -542,7 +543,7 @@ function newTurn(){
                     }
                 }else if (type == "road"){
                     const rowBuildings = getSurrounding(x,y,connectRelativeCoords)
-                    scoreOut  = rowBuildings.filter(x => x.type === "road").length
+                    scoreOut = rowBuildings.filter(x => x.type === "road").length
                     
                 }
                 const scoreInfo =  {score: scoreOut}
