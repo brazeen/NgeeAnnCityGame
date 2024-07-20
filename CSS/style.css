@@ -177,7 +177,7 @@ html, body {
 }
 
 #bulldozer {
-    width: 70px;
+    width: 70px !important; 
     margin-top: 10px;
     transition: transform 0.3s ease-in-out; /* Smooth transition for scaling */
 }
@@ -195,9 +195,11 @@ html, body {
 
 .turn {
     background-color: #fff;
-    padding: 20px;
+    padding: 15px;
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 10px;
+    margin-top: 20px;
 }
 
 .coins {
@@ -205,6 +207,8 @@ html, body {
     padding: 15px;
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 10px;
+    margin-top: 20px;
 }
 
 .score {
@@ -212,6 +216,8 @@ html, body {
     padding: 15px;
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 10px;
+    margin-top: 20px;
 }
 
 #game-grid {
@@ -664,5 +670,9 @@ html, body {
     .game-container {
         order: 0;
         width: 100%;
+    }
+
+    .turn, .coins, .score {
+        margin-top: 10px;
     }
 }
