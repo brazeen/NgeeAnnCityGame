@@ -344,6 +344,8 @@ html, body {
     background-color: gold;
 }
 
+/* Leaderboard */
+
 #leaderboardBody {
     padding: 20vh;
     padding-top: 40px;
@@ -369,11 +371,29 @@ html, body {
     justify-content:center;
     align-items: center;
     border-radius: 10px;
-    margin: 0 20px;
+    margin: 0 20px 20px;
     background-color: rgba(184, 184, 184, 0.9);
     min-width: 500px;
     flex-direction: column;
 }
+
+@media (max-width: 932px) {
+    #leaderboardBody {
+        padding: 0;
+    }
+    #leftSideDiv, #rightSideDiv {
+        min-width: 200px;
+        margin-top: 20px;
+    }
+
+    #leaderboardBody .indexBtn {
+        width: 25%;
+        margin-left: 20px;
+    }
+}
+
+
+/* ------------------*/
 
 #overlay {
     position: fixed;
