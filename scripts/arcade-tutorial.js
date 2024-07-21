@@ -1,7 +1,7 @@
 //description for each tutorial
 const desc = [
     ["Welcome!","Welcome to Arcade Mode! In this game, you build a city to score as many points as possible"],
-    ["Building","To build buildings, drag one from the top onto the board. Building costs 1 coin"],
+    ["Building","To build buildings, drag one from the right side of the board. Building costs 1 coin"],
     ["Building","You can only build buildings next to each other"],
     ["Building","Each building has different criterias for score and coin generation. Hover over it to find out more"],
     ["Demolish","You can demolish buildings by dragging the bulldozer over the building you want to remove. Demolishing costs 1 coin"],

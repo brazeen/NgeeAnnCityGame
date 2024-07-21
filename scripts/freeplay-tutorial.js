@@ -1,10 +1,10 @@
 //description for each tutorial
 const desc = [
     ["Welcome!","Welcome to Freeplay Mode! In this game, you build a city to score as many points as possible"],
-    ["Building","To build buildings, drag one from the top onto the board. Building costs 1 coin"],
+    ["Building","To build buildings, drag one from the right side of the board. Building costs 1 coin"],
     ["Building","You can build buildings anywhere"],
     ["Building","Each building has different criterias for scoring, coin generation and upkeep cost. Hover over it to find out more"],
-    ["Grid Expansion","Building a building on the edge of the grid will expand it by 5 tiles in each direction"],
+    ["Grid Expansion","Building a building on the edge of the board will expand it by 5 tiles in each direction"],
     ["Demolish","You can demolish buildings by dragging the bulldozer over the building you want to remove. Demolishing costs 1 coin"],
     ["Thats it!","Score as many points as you can! The game ends when your city makes a loss 20 turns in a row. Good luck!"],
 
