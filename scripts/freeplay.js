@@ -184,11 +184,11 @@ function renderGrid(){
 renderGrid()
 
 const buildingDesc = {
-    residential: "Next to industry: 1point (max)\nNext to residential/commercial: 1 point\nNext to park: 2 points",
-    industry: "Per industry in city: 1 point\nNext to residential: 1 coin/turn",
-    commercial: "Next to commercial: 1 point\nNext to residential: 1 coin/turn",
-    park: "Next to park: 1 point",
-    road: "Per road in a row: 1 point",
+    residential: "Next to industry: 1point (max)\nConnected to residential/commercial: 1 point\nConnected to park: 2 points\nCosts 1 coin/turn per cluster",
+    industry: "Per industry in city: 1 point\nGenerates 2 coins/turn\nCosts 1 coin/turn",
+    commercial: "Next to commercial: 1 point\nGenerates 3 coins/turn\nCosts 2 coins per turn",
+    park: "Connected to park: 1 point\nCosts 1 coin/turn",
+    road: "Per road in a row: 1 point\nCosts 1 coin/turn (if unconnected)",
 }
 
 //show tooltip for placed buildings
@@ -463,6 +463,10 @@ function calculateAdjScore(){
     adjBuildings = removeDuplicate(adjBuildings)
     for (const x of adjBuildings){
         const building = x[1]
+        //if residential next to industrial, 1 point cap
+        let industryFound = false
+        if (building.type === "residential" && building.score === 1)continue
+        
         //get buildings adjacent to the target
         let adj = []
         for (const clusterID of building.streets){
@@ -481,12 +485,6 @@ function calculateAdjScore(){
             for (const z of adj){
                 const j = z[1].type
                 if (data[0] == j){
-                    if (data[2]){ //check if the "only" constrain is true, limit the score no matter the surrounding buiildings
-                        buildingScore = data[1]
-                        //stop evaluating anymore buildings
-                        exitLoop = true
-                        break
-                    }
                     buildingScore += data[1]
                 }
             }
@@ -565,10 +563,18 @@ function newTurn(){
                 }else if (type == "road"){
                     const rowBuildings = getSurrounding(x,y,connectRelativeCoords)
                     scoreOut = rowBuildings.filter(x => x.type === "road").length
-                    
+                //check if industry next to it
+                }else if (type == "residential"){
+                    const nextBuildings = getSurrounding(x,y, connectRelativeCoords)
+                    nextBuildings.forEach(x => {
+                        if (x.type == "industry"){
+                            spotData.score = 1
+                            scoreOut = 1 
+                        }
+                    }) 
                 }
                 const scoreInfo =  {score: scoreOut}
-                score += scoreInfo.score
+                score += scoreOut
                 finalCoins += coinGenerationData[type]
                 let upkeepObj = {upkeep:0}
                 //calculate upkeep
