@@ -12,6 +12,23 @@
     <title>Freeplay Mode | Ngee Ann City</title>
 </head>
 <body id="arcadeBody" style="overflow-y:hidden;">
+    <div id="tutorial">
+        <div style="width: 45%; height: fit-content; background-color: #70B337;">
+            <div style="display: flex;" class="title">
+                <div id="close" onclick="tutorialClose()">X</div>
+                <div style="margin-left: 3%; padding-top: 2%; padding-bottom: 2%;">Tutorial: <span id="title">Welcome!</span></div>
+                <div style="margin-left: auto; padding-top: 2%; padding-bottom: 2%; margin-right: 2%;"><span id="page-no">1</span>/<span id="page-max">20</span></div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; height: 20rem;" id="img-container">
+                <img>
+            </div>
+            <div style="display: flex; width: 100%;">
+                <div class="nav" onclick="tutorialBack()"><</div>
+                <div class="description"></div>
+                <div class="nav" style="margin-left: auto;" onclick="tutorialNext()">></div>
+            </div>
+        </div>
+    </div>
     <div class="header">
         <div class="top-stats">
             <div class="turn" style="margin-right: 2rem; display: flex; align-items: center; gap: 1rem;">Turn <span id="turn">1</span></div>
@@ -82,6 +99,7 @@
     </div>
 
     <script src="./scripts/freeplay.js"></script>
+    <script src="./scripts/freeplay-tutorial.js"></script>
     <script>
         window.onload = function() {
             document.body.onselectstart = function() {

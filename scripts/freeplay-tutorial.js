@@ -1,11 +1,12 @@
 //description for each tutorial
 const desc = [
-    ["Welcome!","Welcome to Arcade Mode! In this game, you build a city to score as many points as possible"],
+    ["Welcome!","Welcome to Freeplay Mode! In this game, you build a city to score as many points as possible"],
     ["Building","To build buildings, drag one from the top onto the board. Building costs 1 coin"],
-    ["Building","You can only build buildings next to each other"],
-    ["Building","Each building has different criterias for score and coin generation. Hover over it to find out more"],
+    ["Building","You can build buildings anywhere"],
+    ["Building","Each building has different criterias for scoring, coin generation and upkeep cost. Hover over it to find out more"],
+    ["Grid Expansion","Building a building on the edge of the grid will expand it by 5 tiles in each direction"],
     ["Demolish","You can demolish buildings by dragging the bulldozer over the building you want to remove. Demolishing costs 1 coin"],
-    ["Thats it!","Score as many points as you can! The game ends when you run out of coins or fill up your board. Good luck!"],
+    ["Thats it!","Score as many points as you can! The game ends when your city makes a loss 20 turns in a row. Good luck!"],
 
 ]
 var currPage = 1
@@ -25,7 +26,7 @@ function displayPage(){
     pageLabel.innerText = currPage
     tutorialTitle.innerText = desc[currPage-1][0]
     tutorialDesc.innerText = desc[currPage-1][1]
-    imgDisplay.src = `./assets/tutorial/arcade/${currPage}.png`
+    imgDisplay.src = `./assets/tutorial/freeplay/${currPage}.png`
 }
 
 //navigation between pages
@@ -49,3 +50,5 @@ function tutorialBack(){
 function tutorialClose(){
     tutorialHTML.style.display = "none"
 }
+
+displayPage()

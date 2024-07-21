@@ -392,7 +392,7 @@ function generateRandomBuilding(){
         //if choice is the same, change one to make it different
         choice2 = Math.floor(Math.random() * 5)
     }
-    choice1 = typeList[4]
+    choice1 = typeList[choice1]
     choice2 = typeList[choice2]
     const randomdiv1 = document.getElementById('randombuilding-1')
     const randomdiv2 = document.getElementById('randombuilding-2')
