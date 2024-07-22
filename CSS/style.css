@@ -324,11 +324,95 @@ html, body {
     transform: translate(-50%, -50%);
     background-color: aliceblue;
     border: 5px solid black;
+    border-radius: 20px;
     display: none;
     flex-direction: column;
     align-items: center;
 }
 
+#savegame-popup h3 {
+    margin-bottom: 20px; /* Add space below the heading */
+    font-size: 24px; /* Increase font size */
+    text-align: center; /* Center align the heading */
+}
+
+#savegame-popup label {
+    display: block; /* Make label block-level */
+    margin-bottom: 8px; /* Space below the label */
+    font-size: 16px; /* Font size */
+    color: #333; /* Text color */
+}
+
+#savegame-popup input[type="text"] {
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding inside the input */
+    margin-bottom: 20px; /* Space below the input */
+    border: 2px solid #ccc; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
+    font-size: 16px; /* Font size */
+}
+
+#savegame-popup button {
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove border */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding */
+    text-align: center; /* Center text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Get block-level behavior without breaking flow */
+    font-size: 16px; /* Increase font size */
+    margin: 10px 5px; /* Margin for spacing */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 12px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+#savegame-popup button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+#cancelsaveBtn {
+    background-color: #f44336; /* Red background */
+}
+
+#cancelsaveBtn:hover {
+    background-color: #da190b; /* Darker red on hover */
+}
+
+#save-success button {
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove border */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding */
+    text-align: center; /* Center text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Get block-level behavior without breaking flow */
+    font-size: 16px; /* Increase font size */
+    margin: 10px 5px; /* Margin for spacing */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 12px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+#repeat-file button{
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove border */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding */
+    text-align: center; /* Center text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Get block-level behavior without breaking flow */
+    font-size: 16px; /* Increase font size */
+    margin: 10px 5px; /* Margin for spacing */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 12px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+#repeat-file h3 {
+    margin: 3%;
+}
 .load-game-container {
     margin-bottom: 5vh;
     border-radius: 10px;
@@ -395,6 +479,20 @@ html, body {
     #leaderboardBody .indexBtn {
         width: 25%;
         margin-left: 20px;
+    }
+
+    #repeat-file button {
+        width: 50px;
+        height: 40px;
+        font-size: 13px;
+        padding-right: 20px;
+    }
+
+    #savegame-popup button {
+        width: 80px;
+        height: 40px;
+        font-size: 13px;
+        padding-right: 20px;
     }
 }
 
