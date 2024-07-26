@@ -36,6 +36,9 @@ function startGame(id){
     if (save.type == "arcade"){
         window.location.href='arcade.html'
     }
+    else if (save.type == "freeplay"){
+        window.location.href='freeplay.html'
+    }
 }
 
 loadGame()
