@@ -558,7 +558,7 @@ function newTurn(realTurn = true){
                     const surroundBuildings = getSurrounding(x,y,adjRelativeCoords)
                     for (i in surroundBuildings){
                         if (surroundBuildings[i].type == "residential"){
-                           finalCoins = 1
+                           finalCoins += 1
                         }
                     }
                 }else if (type == "road"){
