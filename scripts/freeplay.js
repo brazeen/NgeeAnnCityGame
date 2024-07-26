@@ -90,6 +90,7 @@ if (playSave != null){
     //update html elements
     scoreLabel.innerText = score
     turnNumber.innerText = turns
+    newTurn(false)
 }
 
 //remove duplicates from an array
@@ -538,7 +539,7 @@ function clusterUpkeep(){
     return out
 }
 
-function newTurn(){
+function newTurn(realTurn = true){
     //recalculates score and generate coins
     let score = 0
     let finalCoins = 0
@@ -590,15 +591,16 @@ function newTurn(){
     score += calculateAdjScore()
     //deal with cluster upkeep costs
     finalCoins -= clusterUpkeep()
-
-    //check if city is making a loss
-    if (finalCoins < 0){
-        lossCount += 1
-    } else{
-        lossCount = 0
-    }
     scoreLabel.innerHTML = score
-    turns += 1
+    if ( realTurn){
+        turns += 1
+        //check if city is making a loss
+        if (finalCoins < 0){
+            lossCount += 1
+        } else{
+            lossCount = 0
+        }
+    }
     turnNumber.innerText = turns
     updateCoins(finalCoins)
     generateRandomBuilding()
